@@ -23,8 +23,8 @@
  *   - Git Repository: sfe_merchmasters_repo
  *   - Warehouse: SFE_MERCHMASTERS_WH (X-SMALL)
  *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
- *   - Semantic View: SV_MERCH_INTELLIGENCE
- *   - Cortex Agent: MERCH_INTELLIGENCE_AGENT
+ *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
+ *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT
  * 
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
@@ -169,7 +169,7 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
  * 
  * Next Steps:
  *   1. Navigate to Snowflake Intelligence in Snowsight
- *   2. Select MERCH_INTELLIGENCE_AGENT
+ *   2. Select SFE_MERCH_INTELLIGENCE_AGENT
  *   3. Start asking questions about merchandise performance!
  * 
  * To verify deployment, run these queries in a separate worksheet:

@@ -74,8 +74,8 @@ Follow these steps in order:
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW` | Raw data landing |
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING` | Cleaned data |
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS` | Star schema |
-| **Semantic View** | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE` | Cortex Analyst model |
-| **Agent** | `MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
+| **Semantic View** | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE` | Cortex Analyst model |
+| **Agent** | `SFE_MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
 
 ### Data Model
 
@@ -91,7 +91,7 @@ Follow these steps in order:
 After deployment, access the Cortex Analyst agent:
 
 1. Navigate to **Snowflake Intelligence** in Snowsight
-2. Select **MERCH_INTELLIGENCE_AGENT**
+2. Select **SFE_MERCH_INTELLIGENCE_AGENT**
 3. Ask questions in natural language!
 
 ### Sample Questions
@@ -178,7 +178,6 @@ DROP WAREHOUSE IF EXISTS SFE_MERCHMASTERS_WH;
 merchmasters/
 ├── deploy_all.sql              # One-click deployment (copy to Snowsight)
 ├── README.md                   # This file
-├── plan.md                     # Original project plan
 ├── diagrams/                   # Architecture diagrams (Mermaid)
 │   ├── data-model.md
 │   ├── data-flow.md

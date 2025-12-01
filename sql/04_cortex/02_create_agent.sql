@@ -6,10 +6,10 @@
  * 
  * PURPOSE:
  *   Create Snowflake Intelligence agent for natural language merchandise
- *   analytics using Cortex Analyst with the SV_MERCH_INTELLIGENCE semantic view.
+ *   analytics using Cortex Analyst with the SFE_SV_MERCH_INTELLIGENCE semantic view.
  * 
  * OBJECTS CREATED:
- *   - SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT
+ *   - SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT
  * 
  * NOTE: Agent is created in SNOWFLAKE_INTELLIGENCE.AGENTS schema which makes
  *       it automatically visible in Snowflake Intelligence interface.
@@ -46,7 +46,7 @@ USE SCHEMA SNOWFLAKE_INTELLIGENCE.AGENTS;
 -- ============================================================================
 -- CREATE CORTEX AGENT
 -- ============================================================================
-CREATE OR REPLACE AGENT MERCH_INTELLIGENCE_AGENT
+CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
   COMMENT = 'DEMO: MerchMasters - Tournament merchandise analytics agent | Author: SE Community | Expires: 2025-12-31'
   PROFILE = '{"display_name": "Merchandise Intelligence", "color": "green"}'
   FROM SPECIFICATION
@@ -119,7 +119,7 @@ CREATE OR REPLACE AGENT MERCH_INTELLIGENCE_AGENT
 
   tool_resources:
     MerchAnalytics:
-      semantic_view: SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE
+      semantic_view: SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE
       execution_environment:
         type: warehouse
         warehouse: SFE_MERCHMASTERS_WH
@@ -127,4 +127,4 @@ CREATE OR REPLACE AGENT MERCH_INTELLIGENCE_AGENT
   $$;
 
 -- Grant usage on the agent
-GRANT USAGE ON AGENT SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;
+GRANT USAGE ON AGENT SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;

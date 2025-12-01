@@ -45,11 +45,11 @@ flowchart TB
     end
     
     subgraph SEMANTIC["SEMANTIC_MODELS Schema"]
-        SV[SV_MERCH_INTELLIGENCE<br/>Semantic View]
+        SV[SFE_SV_MERCH_INTELLIGENCE<br/>Semantic View]
     end
     
     subgraph AGENT["snowflake_intelligence.agents"]
-        AI[MERCH_INTELLIGENCE_AGENT<br/>Cortex Analyst]
+        AI[SFE_MERCH_INTELLIGENCE_AGENT<br/>Cortex Analyst]
     end
     
     GEN -->|INSERT| RP & RL & RT & RS & RI
@@ -112,10 +112,10 @@ flowchart TB
 
 ### Semantic Layer (SEMANTIC_MODELS Schema)
 
-#### SV_MERCH_INTELLIGENCE
+#### SFE_SV_MERCH_INTELLIGENCE
 - **Purpose:** Define business-friendly model for Cortex Analyst
 - **Technology:** Snowflake Semantic View (CREATE SEMANTIC VIEW)
-- **Location:** `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE`
+- **Location:** `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE`
 - **Contents:**
   - Dimension definitions with synonyms
   - Fact definitions with units
@@ -125,10 +125,10 @@ flowchart TB
 
 ### Agent Layer
 
-#### MERCH_INTELLIGENCE_AGENT
+#### SFE_MERCH_INTELLIGENCE_AGENT
 - **Purpose:** Natural language interface for merchandise queries
 - **Technology:** Snowflake Cortex Analyst
-- **Location:** `snowflake_intelligence.agents.MERCH_INTELLIGENCE_AGENT`
+- **Location:** `SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT`
 - **Sample Questions:** Maps 1:1 to verified queries in semantic view
 
 ## Data Transformation Summary

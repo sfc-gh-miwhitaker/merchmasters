@@ -18,7 +18,7 @@ This guide explains how to use the MerchMasters demo to showcase Snowflake Intel
 
 1. Log into [Snowsight](https://app.snowflake.com)
 2. In the left navigation, click **AI & ML** → **Intelligence**
-3. You should see **MERCH_INTELLIGENCE_AGENT** listed
+3. You should see **SFE_MERCH_INTELLIGENCE_AGENT** listed
 
 ### Step 2: Start a Conversation
 

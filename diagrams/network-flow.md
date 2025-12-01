@@ -34,8 +34,8 @@ flowchart TB
         end
         
         subgraph Intelligence["Snowflake Intelligence"]
-            CA[Cortex Analyst<br/>MERCH_INTELLIGENCE_AGENT]
-            SV[Semantic View<br/>SV_MERCH_INTELLIGENCE]
+            CA[Cortex Analyst<br/>SFE_MERCH_INTELLIGENCE_AGENT]
+            SV[Semantic View<br/>SFE_SV_MERCH_INTELLIGENCE]
         end
         
         subgraph Integration["Integration Layer"]
@@ -107,16 +107,16 @@ flowchart TB
 
 ### Intelligence Layer
 
-#### SV_MERCH_INTELLIGENCE (Semantic View)
+#### SFE_SV_MERCH_INTELLIGENCE (Semantic View)
 - **Purpose:** Business-friendly data model for Cortex Analyst
 - **Technology:** Snowflake Semantic View
-- **Location:** SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE
+- **Location:** SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE
 - **Defines:** Dimensions, facts, metrics, time filters
 
-#### MERCH_INTELLIGENCE_AGENT (Cortex Analyst)
+#### SFE_MERCH_INTELLIGENCE_AGENT (Cortex Analyst)
 - **Purpose:** Natural language query interface
 - **Technology:** Snowflake Intelligence / Cortex Analyst
-- **Location:** snowflake_intelligence.agents.MERCH_INTELLIGENCE_AGENT
+- **Location:** SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT
 - **Model:** Automatic selection (Snowflake managed)
 
 ## Network Security

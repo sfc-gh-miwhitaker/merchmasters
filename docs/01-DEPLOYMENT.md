@@ -74,7 +74,7 @@ SHOW WAREHOUSES LIKE 'SFE_MERCHMASTERS%';
 SHOW SCHEMAS IN DATABASE SNOWFLAKE_EXAMPLE LIKE 'SFE_MERCH%';
 
 -- Check semantic view
-SHOW VIEWS IN SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS;
+SHOW VIEWS IN SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS LIKE 'SFE_%';
 
 -- Check sample data
 SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES;
@@ -154,7 +154,7 @@ ALTER WAREHOUSE SFE_MERCHMASTERS_WH RESUME;
 After successful deployment:
 
 1. **Access Snowflake Intelligence:** Navigate to Intelligence in Snowsight
-2. **Select the Agent:** Choose MERCH_INTELLIGENCE_AGENT
+2. **Select the Agent:** Choose SFE_MERCH_INTELLIGENCE_AGENT
 3. **Start Asking Questions:** See `docs/02-USAGE.md` for sample queries
 
 ---
@@ -176,5 +176,5 @@ After successful deployment:
 | Schema | SFE_MERCH_RAW | Raw data |
 | Schema | SFE_MERCH_STAGING | Cleaned data |
 | Schema | SFE_MERCH_ANALYTICS | Star schema |
-| Semantic View | SV_MERCH_INTELLIGENCE | Cortex Analyst model |
+| Semantic View | SFE_SV_MERCH_INTELLIGENCE | Cortex Analyst model |
 

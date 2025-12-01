@@ -19,7 +19,7 @@ sequenceDiagram
     actor User as Merchandise Manager
     participant UI as Snowflake Intelligence UI
     participant Auth as Snowflake Auth
-    participant Agent as MERCH_INTELLIGENCE_AGENT
+    participant Agent as SFE_MERCH_INTELLIGENCE_AGENT
     participant SV as Semantic View
     participant WH as SFE_MERCHMASTERS_WH
     participant Data as Analytics Tables
@@ -67,7 +67,7 @@ sequenceDiagram
   - USAGE on SFE_MERCH_* schemas
   - SELECT on all analytics tables
   - USAGE on SFE_MERCHMASTERS_WH warehouse
-  - USAGE on MERCH_INTELLIGENCE_AGENT
+  - USAGE on SFE_MERCH_INTELLIGENCE_AGENT
 
 ### Authorization Flow
 
@@ -80,14 +80,14 @@ sequenceDiagram
 
 2. **Query Submission**
    - User types natural language question
-   - UI forwards to MERCH_INTELLIGENCE_AGENT
+   - UI forwards to SFE_MERCH_INTELLIGENCE_AGENT
 
 3. **Intent Parsing**
    - Agent parses the natural language query
    - Determines relevant dimensions, facts, metrics
 
 4. **Semantic Model Access**
-   - Agent references SV_MERCH_INTELLIGENCE semantic view
+   - Agent references SFE_SV_MERCH_INTELLIGENCE semantic view
    - RBAC validates user has access to underlying tables
 
 5. **SQL Generation & Execution**
@@ -122,7 +122,7 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
 
 ### Semantic View RBAC
 
-The semantic view (`SV_MERCH_INTELLIGENCE`) respects underlying table permissions:
+The semantic view (`SFE_SV_MERCH_INTELLIGENCE`) respects underlying table permissions:
 - User must have SELECT on all referenced tables
 - Column-level access can be restricted at the table level
 - Semantic view does not bypass RBAC

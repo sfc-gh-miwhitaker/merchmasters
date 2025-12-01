@@ -10,7 +10,7 @@
  *   and year-over-year comparisons via Snowflake Intelligence.
  * 
  * OBJECTS CREATED:
- *   - SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE (Semantic View)
+ *   - SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE (Semantic View)
  * 
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
@@ -29,7 +29,7 @@ USE SCHEMA SEMANTIC_MODELS;
 -- ============================================================================
 -- CREATE SEMANTIC VIEW
 -- ============================================================================
-CREATE OR REPLACE SEMANTIC VIEW SV_MERCH_INTELLIGENCE
+CREATE OR REPLACE SEMANTIC VIEW SFE_SV_MERCH_INTELLIGENCE
 
 TABLES (
     products AS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS

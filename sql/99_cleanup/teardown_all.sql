@@ -10,8 +10,8 @@
  * 
  * OBJECTS REMOVED:
  *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
- *   - Semantic View: SV_MERCH_INTELLIGENCE
- *   - Agent: MERCH_INTELLIGENCE_AGENT
+ *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
+ *   - Agent: SFE_MERCH_INTELLIGENCE_AGENT
  *   - Warehouse: SFE_MERCHMASTERS_WH
  *   - Git Repository: sfe_merchmasters_repo
  *   - Git Schema: MERCHMASTERS_GIT_REPOS
@@ -34,12 +34,12 @@ USE ROLE SYSADMIN;
 -- ============================================================================
 -- REMOVE CORTEX AGENT
 -- ============================================================================
-DROP AGENT IF EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT;
+DROP AGENT IF EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT;
 
 -- ============================================================================
 -- REMOVE SEMANTIC VIEW
 -- ============================================================================
-DROP SEMANTIC VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE;
+DROP SEMANTIC VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE;
 
 -- ============================================================================
 -- REMOVE DEMO SCHEMAS (CASCADE drops all contained objects)
@@ -89,7 +89,7 @@ DROP WAREHOUSE IF EXISTS SFE_MERCHMASTERS_WH;
  *   SHOW WAREHOUSES LIKE 'SFE_MERCHMASTERS%';
  *   
  *   -- Should return no semantic view
- *   SHOW VIEWS IN SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS LIKE 'SV_MERCH%';
+ *   SHOW VIEWS IN SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS LIKE 'SFE_SV_MERCH%';
  * 
  * To completely remove ALL demo infrastructure (use with caution):
  *   DROP API INTEGRATION IF EXISTS SFE_MERCHMASTERS_GIT_API_INTEGRATION;
