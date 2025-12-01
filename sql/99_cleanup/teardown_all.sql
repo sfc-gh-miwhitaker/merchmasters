@@ -39,7 +39,7 @@ DROP AGENT IF EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT;
 -- ============================================================================
 -- REMOVE SEMANTIC VIEW
 -- ============================================================================
-DROP VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE;
+DROP SEMANTIC VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE;
 
 -- ============================================================================
 -- REMOVE DEMO SCHEMAS (CASCADE drops all contained objects)
