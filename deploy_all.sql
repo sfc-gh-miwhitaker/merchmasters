@@ -33,6 +33,14 @@
  ******************************************************************************/
 
 -- ============================================================================
+-- CONTEXT SETTING (MANDATORY)
+-- ============================================================================
+-- Set role and warehouse BEFORE any operations.
+-- COMPUTE_WH is used initially; project warehouse created later in script.
+USE ROLE SYSADMIN;
+USE WAREHOUSE COMPUTE_WH;
+
+-- ============================================================================
 -- SECTION 0: EXPIRATION CHECK
 -- ============================================================================
 -- This demo expires on 2025-12-31. After this date, deployment will be blocked.
@@ -50,15 +58,11 @@ END;
 $$;
 
 -- ============================================================================
--- SECTION 1: ROLE AND CONTEXT SETUP
+-- SECTION 1: CREATE API INTEGRATION (ACCOUNTADMIN REQUIRED)
 -- ============================================================================
+-- API Integrations are account-level objects requiring ACCOUNTADMIN
 
 USE ROLE ACCOUNTADMIN;
-
--- ============================================================================
--- SECTION 2: CREATE API INTEGRATION FOR GITHUB
--- ============================================================================
--- Creates secure HTTPS connection to GitHub for repository access
 
 CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
     API_PROVIDER = git_https_api
@@ -66,9 +70,15 @@ CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
     ENABLED = TRUE
     COMMENT = 'DEMO: MerchMasters - Git integration for public repo access | Author: SE Community | Expires: 2025-12-31';
 
+-- Grant usage to SYSADMIN so it can create Git repos using this integration
+GRANT USAGE ON INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION TO ROLE SYSADMIN;
+
 -- ============================================================================
--- SECTION 3: CREATE DATABASE AND GIT REPOSITORY SCHEMA
+-- SECTION 2: CREATE DATABASE AND SCHEMAS (SYSADMIN)
 -- ============================================================================
+-- Switch to SYSADMIN for all remaining operations (least privilege)
+
+USE ROLE SYSADMIN;
 
 CREATE DATABASE IF NOT EXISTS SNOWFLAKE_EXAMPLE
     COMMENT = 'DEMO: Repository for example/demo projects - NOT FOR PRODUCTION';
@@ -77,7 +87,7 @@ CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
     COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
--- SECTION 4: CREATE GIT REPOSITORY REFERENCE
+-- SECTION 3: CREATE GIT REPOSITORY REFERENCE
 -- ============================================================================
 
 CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo
@@ -89,7 +99,7 @@ CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_me
 ALTER GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo FETCH;
 
 -- ============================================================================
--- SECTION 5: CREATE WAREHOUSE
+-- SECTION 4: CREATE WAREHOUSE
 -- ============================================================================
 -- X-SMALL warehouse with aggressive auto-suspend for cost efficiency
 
@@ -104,7 +114,7 @@ CREATE OR REPLACE WAREHOUSE SFE_MERCHMASTERS_WH
 USE WAREHOUSE SFE_MERCHMASTERS_WH;
 
 -- ============================================================================
--- SECTION 6: EXECUTE SETUP SCRIPTS FROM GIT
+-- SECTION 5: EXECUTE SETUP SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates database, schemas, and base infrastructure
 
@@ -112,7 +122,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/01_setup/02_create_schemas.sql;
 
 -- ============================================================================
--- SECTION 7: EXECUTE DATA SCRIPTS FROM GIT
+-- SECTION 6: EXECUTE DATA SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates tables and loads synthetic sample data
 
@@ -120,7 +130,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/02_data/02_load_sample_data.sql;
 
 -- ============================================================================
--- SECTION 8: EXECUTE TRANSFORMATION SCRIPTS FROM GIT
+-- SECTION 7: EXECUTE TRANSFORMATION SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates staging views and analytics layer
 
@@ -128,7 +138,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/03_transformations/02_create_analytics_tables.sql;
 
 -- ============================================================================
--- SECTION 9: EXECUTE CORTEX AI SCRIPTS FROM GIT
+-- SECTION 8: EXECUTE CORTEX AI SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates semantic view and Cortex Analyst agent
 
@@ -136,7 +146,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/04_cortex/02_create_agent.sql;
 
 -- ============================================================================
--- SECTION 10: GRANT PERMISSIONS
+-- SECTION 9: GRANT PERMISSIONS
 -- ============================================================================
 -- Allow PUBLIC role to use demo objects
 
