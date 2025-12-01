@@ -1,7 +1,15 @@
-# Demo Expiration Workflow
+# =============================================================================
+# Demo Expiration Workflow - MerchMasters
+# =============================================================================
+# Purpose: Automatically archive and make repository private after expiration
 # Author: SE Community
-# Purpose: Automatically archive and make private after expiration date
-# Expiration Date: 2025-12-31
+# Expires: 2025-12-31
+#
+# This workflow runs daily and checks if the demo has expired. After expiration:
+# 1. Adds deprecation notice to README
+# 2. Archives the repository
+# 3. Makes repository private (requires admin token)
+# =============================================================================
 
 name: Demo Expiration Check
 
@@ -10,7 +18,7 @@ on:
     # Run daily at midnight UTC
     - cron: '0 0 * * *'
   workflow_dispatch:
-    # Allow manual trigger
+    # Allow manual trigger for testing
 
 env:
   EXPIRATION_DATE: '2025-12-31'
@@ -22,46 +30,78 @@ jobs:
       contents: write
       
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
       - name: Check if demo has expired
         id: check
         run: |
-          EXPIRATION=$(date -d "${{ env.EXPIRATION_DATE }}" +%s)
-          TODAY=$(date +%s)
+          CURRENT_DATE=$(date +%Y-%m-%d)
+          EXPIRATION="${{ env.EXPIRATION_DATE }}"
           
-          if [ $TODAY -ge $EXPIRATION ]; then
+          echo "Current date: $CURRENT_DATE"
+          echo "Expiration date: $EXPIRATION"
+          
+          if [[ "$CURRENT_DATE" > "$EXPIRATION" ]]; then
             echo "expired=true" >> $GITHUB_OUTPUT
-            echo "Demo has expired as of ${{ env.EXPIRATION_DATE }}"
+            echo "::warning::Demo has EXPIRED as of $EXPIRATION"
           else
             echo "expired=false" >> $GITHUB_OUTPUT
-            DAYS_LEFT=$(( ($EXPIRATION - $TODAY) / 86400 ))
-            echo "Demo expires in $DAYS_LEFT days"
+            echo "Demo is still active until $EXPIRATION"
           fi
+
+      - name: Add deprecation notice to README
+        if: steps.check.outputs.expired == 'true'
+        run: |
+          # Check if deprecation notice already exists
+          if ! grep -q "DEPRECATED" README.md; then
+            # Create deprecation banner
+            NOTICE="
+          > ## ⚠️ DEPRECATED - THIS DEMO HAS EXPIRED
+          > 
+          > **Expiration Date:** ${{ env.EXPIRATION_DATE }}
+          > 
+          > This demonstration project has passed its expiration date. The code may contain 
+          > outdated Snowflake syntax or deprecated features. Please contact the SE team 
+          > for an updated version.
+          > 
+          > ---
           
-      - name: Archive repository (on expiration)
+          "
+            # Prepend notice to README
+            echo "$NOTICE" | cat - README.md > temp && mv temp README.md
+            
+            # Commit the change
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add README.md
+            git commit -m "docs: Add deprecation notice - demo expired ${{ env.EXPIRATION_DATE }}"
+            git push
+          fi
+
+      - name: Archive repository
         if: steps.check.outputs.expired == 'true'
         uses: actions/github-script@v7
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
           script: |
-            // Archive the repository
             await github.rest.repos.update({
               owner: context.repo.owner,
               repo: context.repo.repo,
               archived: true
             });
-            
-            console.log('Repository archived due to expiration');
-            
-      - name: Add expiration notice to README
-        if: steps.check.outputs.expired == 'true'
-        run: |
-          echo "## EXPIRED" > EXPIRED_NOTICE.md
-          echo "" >> EXPIRED_NOTICE.md
-          echo "This demonstration project expired on ${{ env.EXPIRATION_DATE }}." >> EXPIRED_NOTICE.md
-          echo "" >> EXPIRED_NOTICE.md
-          echo "The code may contain outdated Snowflake syntax or deprecated features." >> EXPIRED_NOTICE.md
-          echo "" >> EXPIRED_NOTICE.md
-          echo "For current examples, please refer to:" >> EXPIRED_NOTICE.md
-          echo "- [Snowflake Documentation](https://docs.snowflake.com)" >> EXPIRED_NOTICE.md
-          echo "- [Snowflake Quickstarts](https://quickstarts.snowflake.com)" >> EXPIRED_NOTICE.md
+            console.log('Repository has been archived');
 
+      # Note: Making repository private requires admin token with repo scope
+      # Uncomment the following step if you have appropriate permissions
+      # - name: Make repository private
+      #   if: steps.check.outputs.expired == 'true'
+      #   uses: actions/github-script@v7
+      #   with:
+      #     github-token: ${{ secrets.ADMIN_TOKEN }}
+      #     script: |
+      #       await github.rest.repos.update({
+      #         owner: context.repo.owner,
+      #         repo: context.repo.repo,
+      #         private: true
+      #       });
+      #       console.log('Repository has been made private');
