@@ -37,18 +37,17 @@
 -- ============================================================================
 -- This demo expires on 2025-12-31. After this date, deployment will be blocked.
 
+EXECUTE IMMEDIATE
+$$
 DECLARE
     v_expiration_date DATE := '2025-12-31';
-    v_current_date DATE := CURRENT_DATE();
+    demo_expired EXCEPTION (-20001, 'DEMO EXPIRED: This demonstration project expired. The code may contain outdated Snowflake syntax. Please contact the SE team for an updated version.');
 BEGIN
-    IF (v_current_date > v_expiration_date) THEN
-        RAISE EXCEPTION (-20001, 
-            'DEMO EXPIRED: This demonstration project expired on ' || v_expiration_date::STRING || 
-            '. The code may contain outdated Snowflake syntax. Please contact the SE team for an updated version.');
+    IF (CURRENT_DATE() > v_expiration_date) THEN
+        RAISE demo_expired;
     END IF;
-    
-    RETURN 'Expiration check passed. Demo valid until ' || v_expiration_date::STRING;
 END;
+$$;
 
 -- ============================================================================
 -- SECTION 1: ROLE AND CONTEXT SETUP

@@ -90,20 +90,39 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_TOURNAMENTS;
 CREATE OR REPLACE TABLE SFE_DIM_DATES
 COMMENT = 'DEMO: MerchMasters - Date dimension with tournament context | Author: SE Community | Expires: 2025-12-31'
 AS
-WITH tournament_dates AS (
+WITH RECURSIVE date_spine AS (
+    -- Anchor: start with first day of each tournament
     SELECT 
-        t.tournament_id,
-        t.tournament_name,
-        t.tournament_year,
-        t.start_date,
-        d.full_date,
-        ROW_NUMBER() OVER (PARTITION BY t.tournament_id ORDER BY d.full_date) AS tournament_day_num
-    FROM SFE_DIM_TOURNAMENTS t,
-    LATERAL (
-        SELECT DATEADD('day', seq4(), t.start_date) AS full_date
-        FROM TABLE(GENERATOR(ROWCOUNT => 10))
-        WHERE DATEADD('day', seq4(), t.start_date) <= t.end_date
-    ) d
+        tournament_id,
+        tournament_name,
+        tournament_year,
+        start_date,
+        end_date,
+        start_date AS full_date
+    FROM SFE_DIM_TOURNAMENTS
+    
+    UNION ALL
+    
+    -- Recursive: add one day until end_date
+    SELECT 
+        ds.tournament_id,
+        ds.tournament_name,
+        ds.tournament_year,
+        ds.start_date,
+        ds.end_date,
+        DATEADD('day', 1, ds.full_date) AS full_date
+    FROM date_spine ds
+    WHERE ds.full_date < ds.end_date
+),
+tournament_dates AS (
+    SELECT 
+        tournament_id,
+        tournament_name,
+        tournament_year,
+        start_date,
+        full_date,
+        ROW_NUMBER() OVER (PARTITION BY tournament_id ORDER BY full_date) AS tournament_day_num
+    FROM date_spine
 )
 SELECT 
     TO_NUMBER(TO_CHAR(td.full_date, 'YYYYMMDD')) AS date_key,

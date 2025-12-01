@@ -239,24 +239,41 @@ FROM TABLE(GENERATOR(ROWCOUNT => 30));
 -- ============================================================================
 -- Generate ~100,000 sales transactions across both tournaments
 
--- Helper: Create date spine for both tournaments
+-- Helper: Create date spine for both tournaments using recursive CTE
 CREATE OR REPLACE TEMPORARY TABLE tmp_tournament_dates AS
+WITH RECURSIVE date_spine AS (
+    -- Anchor: start with the first day of each tournament
+    SELECT 
+        tournament_id,
+        tournament_name,
+        tournament_year,
+        start_date AS sale_date,
+        end_date
+    FROM SFE_RAW_TOURNAMENTS
+    
+    UNION ALL
+    
+    -- Recursive: add one day until we reach end_date
+    SELECT 
+        ds.tournament_id,
+        ds.tournament_name,
+        ds.tournament_year,
+        DATEADD('day', 1, ds.sale_date) AS sale_date,
+        ds.end_date
+    FROM date_spine ds
+    WHERE ds.sale_date < ds.end_date
+)
 SELECT 
-    t.tournament_id,
-    t.tournament_name,
-    t.tournament_year,
-    d.sale_date,
+    tournament_id,
+    tournament_name,
+    tournament_year,
+    sale_date,
     CASE 
-        WHEN DAYOFWEEK(d.sale_date) IN (0, 6) THEN 1.5  -- Weekend boost
-        WHEN d.sale_date = t.end_date THEN 2.0          -- Final day surge
+        WHEN DAYOFWEEK(sale_date) IN (0, 6) THEN 1.5  -- Weekend boost
+        WHEN sale_date = end_date THEN 2.0            -- Final day surge
         ELSE 1.0 
     END AS day_multiplier
-FROM SFE_RAW_TOURNAMENTS t,
-LATERAL (
-    SELECT DATEADD('day', SEQ4(), t.start_date) AS sale_date
-    FROM TABLE(GENERATOR(ROWCOUNT => 7))
-    WHERE DATEADD('day', SEQ4(), t.start_date) <= t.end_date
-) d;
+FROM date_spine;
 
 -- Generate sales for 2024 tournament (prior year)
 INSERT INTO SFE_RAW_SALES (

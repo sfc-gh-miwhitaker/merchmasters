@@ -36,9 +36,8 @@ CREATE OR REPLACE TABLE SFE_RAW_PRODUCTS (
     unit_cost           NUMBER(10,2),
     retail_price        NUMBER(10,2),
     is_dated_year       BOOLEAN DEFAULT FALSE,
-    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    COMMENT = 'DEMO: MerchMasters - Product catalog | Author: SE Community | Expires: 2025-12-31'
-);
+    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'DEMO: MerchMasters - Product catalog | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
 -- LOCATIONS TABLE
@@ -49,9 +48,8 @@ CREATE OR REPLACE TABLE SFE_RAW_LOCATIONS (
     location_type       VARCHAR(50) NOT NULL,
     capacity_sqft       INTEGER,
     is_active           BOOLEAN DEFAULT TRUE,
-    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    COMMENT = 'DEMO: MerchMasters - Retail locations | Author: SE Community | Expires: 2025-12-31'
-);
+    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'DEMO: MerchMasters - Retail locations | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
 -- TOURNAMENTS TABLE
@@ -62,9 +60,8 @@ CREATE OR REPLACE TABLE SFE_RAW_TOURNAMENTS (
     tournament_year     INTEGER NOT NULL,
     start_date          DATE NOT NULL,
     end_date            DATE NOT NULL,
-    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    COMMENT = 'DEMO: MerchMasters - Tournament calendar | Author: SE Community | Expires: 2025-12-31'
-);
+    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'DEMO: MerchMasters - Tournament calendar | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
 -- SALES TRANSACTIONS TABLE
@@ -81,9 +78,8 @@ CREATE OR REPLACE TABLE SFE_RAW_SALES (
     total_amount        NUMBER(10,2) NOT NULL,
     payment_method      VARCHAR(20),
     tournament_id       INTEGER,
-    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    COMMENT = 'DEMO: MerchMasters - POS transactions | Author: SE Community | Expires: 2025-12-31'
-);
+    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'DEMO: MerchMasters - POS transactions | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
 -- INVENTORY SNAPSHOTS TABLE
@@ -98,9 +94,8 @@ CREATE OR REPLACE TABLE SFE_RAW_INVENTORY (
     sold_qty            INTEGER DEFAULT 0,
     ending_qty          INTEGER DEFAULT 0,
     tournament_id       INTEGER,
-    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP(),
-    COMMENT = 'DEMO: MerchMasters - Daily inventory snapshots | Author: SE Community | Expires: 2025-12-31'
-);
+    created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
+) COMMENT = 'DEMO: MerchMasters - Daily inventory snapshots | Author: SE Community | Expires: 2025-12-31';
 
 -- Tables ready for data load
 
