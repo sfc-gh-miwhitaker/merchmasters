@@ -1,7 +1,7 @@
 # MerchMasters: Tournament Merchandise Intelligence Demo
 
 ## GitHub Repository URL
-https://github.com/sfc-gh-miwhitaker/merchmasters.git
+https://github.com/sfc-gh-miwhitaker/merchmasters
 
 ---
 
