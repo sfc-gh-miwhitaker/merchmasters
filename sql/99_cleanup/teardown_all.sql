@@ -24,12 +24,17 @@
  * Author: SE Community | Expires: 2025-12-31
  ******************************************************************************/
 
-USE ROLE ACCOUNTADMIN;
+-- ============================================================================
+-- CONTEXT SETTING (MANDATORY)
+-- ============================================================================
+-- Note: Using SYSADMIN for most operations. Only escalate to ACCOUNTADMIN
+-- if dropping account-level objects like API Integrations.
+USE ROLE SYSADMIN;
 
 -- ============================================================================
 -- REMOVE CORTEX AGENT
 -- ============================================================================
-DROP CORTEX ANALYST IF EXISTS snowflake_intelligence.agents.MERCH_INTELLIGENCE_AGENT;
+DROP AGENT IF EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT;
 
 -- ============================================================================
 -- REMOVE SEMANTIC VIEW

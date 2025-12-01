@@ -9,7 +9,10 @@
  *   analytics using Cortex Analyst with the SV_MERCH_INTELLIGENCE semantic view.
  * 
  * OBJECTS CREATED:
- *   - SNOWFLAKE_EXAMPLE.AGENTS.MERCH_INTELLIGENCE_AGENT
+ *   - SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT
+ * 
+ * NOTE: Agent is created in SNOWFLAKE_INTELLIGENCE.AGENTS schema which makes
+ *       it automatically visible in Snowflake Intelligence interface.
  * 
  * SAMPLE QUESTIONS:
  *   1. "What are the top 10 selling products this year?"
@@ -23,15 +26,22 @@
  * Author: SE Community | Expires: 2025-12-31
  ******************************************************************************/
 
-USE DATABASE SNOWFLAKE_EXAMPLE;
+-- ============================================================================
+-- CONTEXT SETTING (MANDATORY)
+-- ============================================================================
+USE ROLE SYSADMIN;
+USE WAREHOUSE SFE_MERCHMASTERS_WH;
 
 -- ============================================================================
--- CREATE AGENT SCHEMA
+-- CREATE SNOWFLAKE INTELLIGENCE DATABASE AND AGENTS SCHEMA
 -- ============================================================================
-CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.AGENTS
-    COMMENT = 'DEMO: Cortex Agents for natural language analytics';
+CREATE DATABASE IF NOT EXISTS SNOWFLAKE_INTELLIGENCE
+    COMMENT = 'Snowflake Intelligence agents';
 
-USE SCHEMA SNOWFLAKE_EXAMPLE.AGENTS;
+CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS
+    COMMENT = 'Cortex Agents for Snowflake Intelligence';
+
+USE SCHEMA SNOWFLAKE_INTELLIGENCE.AGENTS;
 
 -- ============================================================================
 -- CREATE CORTEX AGENT
@@ -64,23 +74,23 @@ CREATE OR REPLACE AGENT MERCH_INTELLIGENCE_AGENT
       - ~200 products across 6 categories at 4 retail locations
 
     orchestration: |
-      For any merchandise, sales, inventory, or revenue question, use the Analyst tool 
-      to query the SV_MERCH_INTELLIGENCE semantic view.
+      Use the MerchAnalytics tool to answer questions about merchandise sales, 
+      inventory, revenue, margins, and performance comparisons.
       
-      QUERY PLANNING:
-      - For year-over-year questions, filter or group by tournament_year
-      - For category questions, use the category dimension
-      - For location questions, use location_name
-      - For trend questions, group by full_date
+      QUERY GUIDANCE:
+      - Year-over-year: Filter by tournament_year (2024=prior, 2025=current)
+      - Categories: Shirts, Hats, Drinkware, Accessories, Outerwear
+      - Locations: Pro Shop, Tournament Tent A, Tournament Tent B, Clubhouse Store
+      - Metrics: total_revenue, total_units_sold, total_gross_margin, transaction_count
 
     response: |
       FORMAT:
-      - Use clear Markdown formatting with headers for sections
-      - Present tabular data in Markdown tables
-      - Format currency with dollar signs: $1,234.56
-      - Format percentages with one decimal: 12.3%
+      - Use Markdown tables for tabular data
+      - Format currency: $1,234.56
+      - Format percentages: 12.3%
+      - Include data context (year, date range) in responses
       
-      After answering, suggest 1-2 related questions the user might want to explore.
+      After answering, suggest 1-2 related follow-up questions.
 
     sample_questions:
       - question: "What are the top 10 selling products this year?"
@@ -91,13 +101,30 @@ CREATE OR REPLACE AGENT MERCH_INTELLIGENCE_AGENT
   tools:
     - tool_spec:
         type: cortex_analyst_text_to_sql
-        name: Analyst
-        description: Converts natural language to SQL queries for merchandise analytics
+        name: MerchAnalytics
+        description: |
+          Query tournament merchandise data including sales transactions, inventory levels,
+          products, locations, and tournament information. Supports year-over-year comparisons
+          between 2024 (prior year) and 2025 (current year) tournaments.
+          
+          AVAILABLE DATA:
+          - Sales: transaction_id, date, location, product, quantity, revenue, margin
+          - Inventory: snapshot_date, location, product, beginning/ending quantities, stock_status
+          - Products: style_number, name, category, subcategory, vendor, pricing
+          - Locations: Pro Shop, Tournament Tent A/B, Clubhouse Store
+          - Tournaments: 2024 (Apr 8-14) and 2025 (Apr 7-13)
+          
+          KEY METRICS: total_revenue, total_units_sold, total_gross_margin, 
+          transaction_count, avg_transaction_value, total_ending_inventory
 
   tool_resources:
-    Analyst:
+    MerchAnalytics:
       semantic_view: SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SV_MERCH_INTELLIGENCE
+      execution_environment:
+        type: warehouse
+        warehouse: SFE_MERCHMASTERS_WH
+        query_timeout: 60
   $$;
 
--- Grant usage to PUBLIC
-GRANT USAGE ON AGENT SNOWFLAKE_EXAMPLE.AGENTS.MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;
+-- Grant usage on the agent
+GRANT USAGE ON AGENT SNOWFLAKE_INTELLIGENCE.AGENTS.MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;

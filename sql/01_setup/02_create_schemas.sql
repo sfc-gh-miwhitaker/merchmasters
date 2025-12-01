@@ -19,7 +19,12 @@
  * Author: SE Community | Expires: 2025-12-31
  ******************************************************************************/
 
+-- ============================================================================
+-- CONTEXT SETTING (MANDATORY)
+-- ============================================================================
+USE ROLE SYSADMIN;
 USE DATABASE SNOWFLAKE_EXAMPLE;
+USE WAREHOUSE SFE_MERCHMASTERS_WH;
 
 -- Raw data landing zone
 CREATE SCHEMA IF NOT EXISTS SFE_MERCH_RAW

@@ -6,7 +6,6 @@
  * 
  * PURPOSE:
  *   Define semantic model for tournament merchandise analytics enabling
- 
  *   natural language queries about sales performance, inventory status,
  *   and year-over-year comparisons via Snowflake Intelligence.
  * 
@@ -19,7 +18,12 @@
  * Author: SE Community | Expires: 2025-12-31
  ******************************************************************************/
 
+-- ============================================================================
+-- CONTEXT SETTING (MANDATORY)
+-- ============================================================================
+USE ROLE SYSADMIN;
 USE DATABASE SNOWFLAKE_EXAMPLE;
+USE WAREHOUSE SFE_MERCHMASTERS_WH;
 USE SCHEMA SEMANTIC_MODELS;
 
 -- ============================================================================
@@ -55,97 +59,97 @@ RELATIONSHIPS (
 
 FACTS (
     sales.quantity_sold AS quantity_sold
-        WITH SYNONYMS = ('units sold', 'qty', 'quantity', 'units'),
+        WITH SYNONYMS ('units sold', 'qty', 'quantity', 'units'),
     sales.unit_price AS unit_price
-        WITH SYNONYMS = ('price', 'selling price'),
+        WITH SYNONYMS ('price', 'selling price'),
     sales.total_amount AS total_amount
-        WITH SYNONYMS = ('revenue', 'sales', 'sales amount', 'dollars'),
+        WITH SYNONYMS ('revenue', 'sales', 'sales amount', 'dollars'),
     sales.total_cost AS total_cost
-        WITH SYNONYMS = ('cost', 'cogs', 'cost of goods'),
+        WITH SYNONYMS ('cost', 'cogs', 'cost of goods'),
     sales.gross_margin AS gross_margin
-        WITH SYNONYMS = ('margin', 'profit', 'gross profit'),
+        WITH SYNONYMS ('margin', 'profit', 'gross profit'),
     products.product_cost AS unit_cost
-        WITH SYNONYMS = ('cost per unit', 'wholesale cost'),
+        WITH SYNONYMS ('cost per unit', 'wholesale cost'),
     products.product_price AS retail_price
-        WITH SYNONYMS = ('price', 'msrp', 'list price'),
+        WITH SYNONYMS ('price', 'msrp', 'list price'),
     products.product_margin_pct AS margin_pct
-        WITH SYNONYMS = ('margin percent', 'markup'),
+        WITH SYNONYMS ('margin percent', 'markup'),
     inventory.beginning_qty AS beginning_qty
-        WITH SYNONYMS = ('opening inventory', 'start quantity'),
+        WITH SYNONYMS ('opening inventory', 'start quantity'),
     inventory.received_qty AS received_qty
-        WITH SYNONYMS = ('receipts', 'received', 'incoming'),
+        WITH SYNONYMS ('receipts', 'received', 'incoming'),
     inventory.sold_qty AS sold_qty
-        WITH SYNONYMS = ('sold', 'units sold from inventory'),
+        WITH SYNONYMS ('sold', 'units sold from inventory'),
     inventory.ending_qty AS ending_qty
-        WITH SYNONYMS = ('on hand', 'current stock', 'ending inventory', 'available'),
+        WITH SYNONYMS ('on hand', 'current stock', 'ending inventory', 'available'),
     inventory.inventory_value_cost AS inventory_value_cost
-        WITH SYNONYMS = ('inventory cost value', 'stock value at cost'),
+        WITH SYNONYMS ('inventory cost value', 'stock value at cost'),
     inventory.inventory_value_retail AS inventory_value_retail
-        WITH SYNONYMS = ('inventory retail value', 'stock value at retail')
+        WITH SYNONYMS ('inventory retail value', 'stock value at retail')
 )
 
 DIMENSIONS (
     products.style_number AS style_number
-        WITH SYNONYMS = ('style', 'style number', 'item number', 'product code'),
+        WITH SYNONYMS ('style', 'style number', 'item number', 'product code'),
     products.product_name AS product_name
-        WITH SYNONYMS = ('name', 'product', 'item name', 'description'),
+        WITH SYNONYMS ('name', 'product', 'item name', 'description'),
     products.category AS category
-        WITH SYNONYMS = ('product category', 'type', 'product type'),
+        WITH SYNONYMS ('product category', 'type', 'product type'),
     products.subcategory AS subcategory
-        WITH SYNONYMS = ('sub-category', 'product subcategory'),
+        WITH SYNONYMS ('sub-category', 'product subcategory'),
     products.collection AS collection
-        WITH SYNONYMS = ('product collection', 'line', 'product line'),
+        WITH SYNONYMS ('product collection', 'line', 'product line'),
     products.vendor AS vendor
-        WITH SYNONYMS = ('supplier', 'brand', 'manufacturer'),
+        WITH SYNONYMS ('supplier', 'brand', 'manufacturer'),
     products.is_dated_year AS is_dated_year
-        WITH SYNONYMS = ('dated', 'tournament dated', 'year specific'),
+        WITH SYNONYMS ('dated', 'tournament dated', 'year specific'),
     locations.location_id AS location_id,
     locations.location_name AS location_name
-        WITH SYNONYMS = ('store name', 'location', 'store'),
+        WITH SYNONYMS ('store name', 'location', 'store'),
     locations.location_type AS location_type
-        WITH SYNONYMS = ('store type', 'outlet type'),
+        WITH SYNONYMS ('store type', 'outlet type'),
     tournaments.tournament_id AS tournament_id,
     tournaments.tournament_name AS tournament_name
-        WITH SYNONYMS = ('event name', 'championship name'),
+        WITH SYNONYMS ('event name', 'championship name'),
     tournaments.tournament_year AS tournament_year
-        WITH SYNONYMS = ('year', 'event year'),
+        WITH SYNONYMS ('year', 'event year'),
     tournaments.year_label AS year_label
-        WITH SYNONYMS = ('year comparison', 'period'),
+        WITH SYNONYMS ('year comparison', 'period'),
     dates.full_date AS full_date
-        WITH SYNONYMS = ('date', 'transaction date', 'sale date'),
+        WITH SYNONYMS ('date', 'transaction date', 'sale date'),
     dates.day_name AS day_name
-        WITH SYNONYMS = ('weekday', 'day of week'),
+        WITH SYNONYMS ('weekday', 'day of week'),
     dates.tournament_day_num AS tournament_day_num
-        WITH SYNONYMS = ('day number', 'tournament day'),
+        WITH SYNONYMS ('day number', 'tournament day'),
     dates.tournament_day_label AS tournament_day_label
-        WITH SYNONYMS = ('round', 'round name'),
+        WITH SYNONYMS ('round', 'round name'),
     dates.is_competition_day AS is_competition_day
-        WITH SYNONYMS = ('competition', 'official round'),
+        WITH SYNONYMS ('competition', 'official round'),
     sales.payment_method AS payment_method
-        WITH SYNONYMS = ('payment type', 'payment'),
+        WITH SYNONYMS ('payment type', 'payment'),
     inventory.stock_status AS stock_status
-        WITH SYNONYMS = ('inventory status', 'stock level')
+        WITH SYNONYMS ('inventory status', 'stock level')
 )
 
 METRICS (
-    sales.total_revenue AS SUM(total_amount)
-        WITH SYNONYMS = ('revenue', 'total sales', 'sales dollars', 'gross revenue'),
-    sales.total_units_sold AS SUM(quantity_sold)
-        WITH SYNONYMS = ('units sold', 'total quantity', 'volume'),
-    sales.total_gross_margin AS SUM(gross_margin)
-        WITH SYNONYMS = ('gross profit', 'total margin', 'profit'),
-    sales.transaction_count AS COUNT(transaction_id)
-        WITH SYNONYMS = ('number of transactions', 'sales count', 'order count'),
-    sales.avg_transaction_value AS AVG(total_amount)
-        WITH SYNONYMS = ('average sale', 'avg order value', 'aov'),
-    sales.avg_units_per_transaction AS AVG(quantity_sold)
-        WITH SYNONYMS = ('average units', 'units per sale'),
-    inventory.total_ending_inventory AS SUM(ending_qty)
-        WITH SYNONYMS = ('total stock', 'on hand inventory', 'total on hand'),
-    inventory.total_inventory_value AS SUM(inventory_value_retail)
-        WITH SYNONYMS = ('stock value', 'inventory dollars'),
-    products.product_count AS COUNT(DISTINCT style_number)
-        WITH SYNONYMS = ('number of products', 'sku count', 'product variety')
+    sales.total_revenue AS SUM(sales.total_amount)
+        WITH SYNONYMS ('revenue', 'total sales', 'sales dollars', 'gross revenue'),
+    sales.total_units_sold AS SUM(sales.quantity_sold)
+        WITH SYNONYMS ('units sold', 'total quantity', 'volume'),
+    sales.total_gross_margin AS SUM(sales.gross_margin)
+        WITH SYNONYMS ('gross profit', 'total margin', 'profit'),
+    sales.transaction_count AS COUNT(sales.transaction_id)
+        WITH SYNONYMS ('number of transactions', 'sales count', 'order count'),
+    sales.avg_transaction_value AS AVG(sales.total_amount)
+        WITH SYNONYMS ('average sale', 'avg order value', 'aov'),
+    sales.avg_units_per_transaction AS AVG(sales.quantity_sold)
+        WITH SYNONYMS ('average units', 'units per sale'),
+    inventory.total_ending_inventory AS SUM(inventory.ending_qty)
+        WITH SYNONYMS ('total stock', 'on hand inventory', 'total on hand'),
+    inventory.total_inventory_value AS SUM(inventory.inventory_value_retail)
+        WITH SYNONYMS ('stock value', 'inventory dollars'),
+    products.product_count AS COUNT(DISTINCT products.style_number)
+        WITH SYNONYMS ('number of products', 'sku count', 'product variety')
 )
 
 COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analytics | Author: SE Community | Expires: 2025-12-31';
