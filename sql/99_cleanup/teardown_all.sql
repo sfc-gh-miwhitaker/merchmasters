@@ -38,8 +38,9 @@ USE ROLE SYSADMIN;
 -- REMOVE AGENT FROM SNOWFLAKE INTELLIGENCE OBJECT
 -- ============================================================================
 -- This removes the agent from the UI visibility list (must be done before dropping agent)
-ALTER SNOWFLAKE INTELLIGENCE IF EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
-    REMOVE AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
+-- Note: This will error if the Intelligence object doesn't exist - that's OK during cleanup
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    DROP AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
 
 -- ============================================================================
 -- REMOVE CORTEX AGENT
