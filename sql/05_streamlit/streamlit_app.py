@@ -520,7 +520,7 @@ if show_sales:
             display_df['REVENUE'] = display_df['REVENUE'].apply(lambda x: f"${x:,.0f}")
             display_df['MARGIN'] = display_df['MARGIN'].apply(lambda x: f"${x:,.0f}")
             display_df.columns = ['Category', 'Revenue', 'Units', 'Margin']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            st.dataframe(display_df, use_container_width=True)
         else:
             st.info("No category data available")
 
@@ -586,7 +586,7 @@ if show_inventory:
         if len(attention_df) > 0:
             display_df = attention_df[['STYLE_NUMBER', 'PRODUCT_NAME', 'CATEGORY', 'LOCATION_NAME', 'ON_HAND', 'STOCK_STATUS']].copy()
             display_df.columns = ['Style', 'Product', 'Category', 'Location', 'On Hand', 'Status']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            st.dataframe(display_df, use_container_width=True)
         else:
             st.success("No items require immediate attention!")
     else:
@@ -607,7 +607,7 @@ if show_products:
             display_df = top_products_df[['STYLE_NUMBER', 'PRODUCT_NAME', 'CATEGORY', 'REVENUE', 'UNITS']].copy()
             display_df['REVENUE'] = display_df['REVENUE'].apply(lambda x: f"${x:,.0f}")
             display_df.columns = ['Style', 'Product', 'Category', 'Revenue', 'Units']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            st.dataframe(display_df, use_container_width=True)
         else:
             st.info("No product data available")
     
@@ -619,7 +619,7 @@ if show_products:
             display_df['REVENUE'] = display_df['REVENUE'].apply(lambda x: f"${x:,.0f}")
             display_df['MARGIN_PCT'] = display_df['MARGIN_PCT'].apply(lambda x: f"{x:.1f}%")
             display_df.columns = ['Vendor', 'Products', 'Revenue', 'Margin %']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            st.dataframe(display_df, use_container_width=True)
         else:
             st.info("No vendor data available")
 
@@ -646,7 +646,7 @@ if show_locations:
             display_df['REVENUE'] = display_df['REVENUE'].apply(lambda x: f"${x:,.0f}")
             display_df['AVG_TRANSACTION'] = display_df['AVG_TRANSACTION'].apply(lambda x: f"${x:.0f}")
             display_df.columns = ['Location', 'Revenue', 'Trans.', 'Avg $']
-            st.dataframe(display_df, use_container_width=True, hide_index=True)
+            st.dataframe(display_df, use_container_width=True)
     else:
         st.info("No location data available")
 
