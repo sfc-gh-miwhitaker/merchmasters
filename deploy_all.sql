@@ -8,7 +8,7 @@
  * CREATED: 2025-12-01
  * EXPIRES: 2025-12-31
  * PURPOSE: Tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)
- * LAST_UPDATED: 2025-12-01
+ * LAST_UPDATED: 2025-12-02
  * GITHUB_REPO: https://github.com/sfc-gh-miwhitaker/merchmasters
  * 
  * INSTRUCTIONS:
@@ -19,12 +19,13 @@
  *   5. Wait ~10 minutes for completion
  * 
  * OBJECTS CREATED:
+ *   - Snowflake Intelligence Object: SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
  *   - API Integration: SFE_MERCHMASTERS_GIT_API_INTEGRATION
  *   - Git Repository: sfe_merchmasters_repo
  *   - Warehouse: SFE_MERCHMASTERS_WH (X-SMALL)
- *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
+ *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS, MERCHMASTERS
  *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
- *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT
+ *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT (in MERCHMASTERS schema)
  *   - Streamlit Dashboard: SFE_THE_LEADERBOARD
  * 
  * CLEANUP:
@@ -59,11 +60,26 @@ END;
 $$;
 
 -- ============================================================================
--- SECTION 1: CREATE API INTEGRATION (ACCOUNTADMIN REQUIRED)
+-- SECTION 1: CREATE SNOWFLAKE INTELLIGENCE OBJECT (ACCOUNTADMIN REQUIRED)
 -- ============================================================================
--- API Integrations are account-level objects requiring ACCOUNTADMIN
+-- Creates the account-level Snowflake Intelligence object that controls
+-- agent visibility in the Snowflake Intelligence UI.
 
 USE ROLE ACCOUNTADMIN;
+
+CREATE SNOWFLAKE INTELLIGENCE IF NOT EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
+    COMMENT = 'Central object for managing agent visibility in Snowflake Intelligence UI | Created: 2025-12-02';
+
+-- Grant visibility to all users
+GRANT USAGE ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT TO ROLE PUBLIC;
+
+-- Grant management to admin role
+GRANT ALTER ON SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT TO ROLE SYSADMIN;
+
+-- ============================================================================
+-- SECTION 2: CREATE API INTEGRATION (ACCOUNTADMIN REQUIRED)
+-- ============================================================================
+-- API Integrations are account-level objects requiring ACCOUNTADMIN
 
 CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
     API_PROVIDER = git_https_api
@@ -75,7 +91,7 @@ CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
 GRANT USAGE ON INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION TO ROLE SYSADMIN;
 
 -- ============================================================================
--- SECTION 2: CREATE DATABASE AND SCHEMAS (SYSADMIN)
+-- SECTION 3: CREATE DATABASE AND SCHEMAS (SYSADMIN)
 -- ============================================================================
 -- Switch to SYSADMIN for all remaining operations (least privilege)
 
@@ -88,7 +104,7 @@ CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
     COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
--- SECTION 3: CREATE GIT REPOSITORY REFERENCE
+-- SECTION 4: CREATE GIT REPOSITORY REFERENCE
 -- ============================================================================
 
 CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo
@@ -100,7 +116,7 @@ CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_me
 ALTER GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo FETCH;
 
 -- ============================================================================
--- SECTION 4: CREATE WAREHOUSE
+-- SECTION 5: CREATE WAREHOUSE
 -- ============================================================================
 -- X-SMALL warehouse with aggressive auto-suspend for cost efficiency
 
@@ -115,7 +131,7 @@ CREATE OR REPLACE WAREHOUSE SFE_MERCHMASTERS_WH
 USE WAREHOUSE SFE_MERCHMASTERS_WH;
 
 -- ============================================================================
--- SECTION 5: EXECUTE SETUP SCRIPTS FROM GIT
+-- SECTION 6: EXECUTE SETUP SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates database, schemas, and base infrastructure
 
@@ -123,7 +139,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/01_setup/02_create_schemas.sql;
 
 -- ============================================================================
--- SECTION 6: EXECUTE DATA SCRIPTS FROM GIT
+-- SECTION 7: EXECUTE DATA SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates tables and loads synthetic sample data
 
@@ -131,7 +147,7 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/02_data/02_load_sample_data.sql;
 
 -- ============================================================================
--- SECTION 7: EXECUTE TRANSFORMATION SCRIPTS FROM GIT
+-- SECTION 8: EXECUTE TRANSFORMATION SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates staging views and analytics layer
 
@@ -139,22 +155,23 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/03_transformations/02_create_analytics_tables.sql;
 
 -- ============================================================================
--- SECTION 8: EXECUTE CORTEX AI SCRIPTS FROM GIT
+-- SECTION 9: EXECUTE CORTEX AI SCRIPTS FROM GIT
 -- ============================================================================
 -- Creates semantic view and Cortex Analyst agent
+-- Agent is created in project schema and added to Snowflake Intelligence object
 
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/04_cortex/01_create_semantic_view.sql;
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/04_cortex/02_create_agent.sql;
 
 -- ============================================================================
--- SECTION 9: DEPLOY STREAMLIT DASHBOARD
+-- SECTION 10: DEPLOY STREAMLIT DASHBOARD
 -- ============================================================================
 -- Creates interactive merchandise analytics dashboard
 
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/05_streamlit/01_create_streamlit_app.sql;
 
 -- ============================================================================
--- SECTION 10: GRANT PERMISSIONS
+-- SECTION 11: GRANT PERMISSIONS
 -- ============================================================================
 -- Allow PUBLIC role to use demo objects
 
@@ -163,6 +180,7 @@ GRANT USAGE ON SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW TO ROLE PUBLIC;
 GRANT USAGE ON SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING TO ROLE PUBLIC;
 GRANT USAGE ON SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS TO ROLE PUBLIC;
 GRANT USAGE ON SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS TO ROLE PUBLIC;
+GRANT USAGE ON SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS TO ROLE PUBLIC;
 
 GRANT SELECT ON ALL TABLES IN SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW TO ROLE PUBLIC;
 GRANT SELECT ON ALL TABLES IN SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING TO ROLE PUBLIC;
@@ -188,6 +206,7 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
  * To verify deployment, run these queries in a separate worksheet:
  *   SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES;
  *   SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS;
+ *   SHOW AGENTS IN SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
  ******************************************************************************/
 
 /******************************************************************************
@@ -210,6 +229,9 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
  *   → This demo has passed its expiration date
  *   → Contact SE team for updated version
  * 
+ * Error: "Snowflake Intelligence object already exists"
+ *   → This is OK - the object is shared across all demos
+ *   → The CREATE IF NOT EXISTS will succeed without changes
+ * 
  * For cleanup instructions, see: sql/99_cleanup/teardown_all.sql
  ******************************************************************************/
-

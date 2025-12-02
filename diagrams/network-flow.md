@@ -1,7 +1,7 @@
 # Network Flow - MerchMasters
 
 **Author:** SE Community  
-**Last Updated:** 2025-12-01  
+**Last Updated:** 2025-12-02  
 **Expires:** 2025-12-31 (30 days)  
 **Status:** Reference Implementation
 
@@ -116,7 +116,8 @@ flowchart TB
 #### SFE_MERCH_INTELLIGENCE_AGENT (Cortex Analyst)
 - **Purpose:** Natural language query interface
 - **Technology:** Snowflake Intelligence / Cortex Analyst
-- **Location:** SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT
+- **Location:** SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT
+- **Visibility:** Managed by SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
 - **Model:** Automatic selection (Snowflake managed)
 
 ## Network Security

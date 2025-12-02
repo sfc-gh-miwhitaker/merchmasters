@@ -9,10 +9,12 @@
  *   analytics using Cortex Analyst with the SFE_SV_MERCH_INTELLIGENCE semantic view.
  * 
  * OBJECTS CREATED:
- *   - SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT
+ *   - SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT (Agent)
+ *   - Added to SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT for UI visibility
  * 
- * NOTE: Agent is created in SNOWFLAKE_INTELLIGENCE.AGENTS schema which makes
- *       it automatically visible in Snowflake Intelligence interface.
+ * NOTE: Agent is created in project-specific schema and added to Snowflake
+ *       Intelligence object for visibility in the Snowflake Intelligence UI.
+ *       This follows the Dec 2025 recommended pattern.
  * 
  * SAMPLE QUESTIONS:
  *   1. "What are the top 10 selling products this year?"
@@ -31,17 +33,15 @@
 -- ============================================================================
 USE ROLE SYSADMIN;
 USE WAREHOUSE SFE_MERCHMASTERS_WH;
+USE DATABASE SNOWFLAKE_EXAMPLE;
 
 -- ============================================================================
--- CREATE SNOWFLAKE INTELLIGENCE DATABASE AND AGENTS SCHEMA
+-- CREATE MERCHMASTERS SCHEMA FOR AGENT (if not exists)
 -- ============================================================================
-CREATE DATABASE IF NOT EXISTS SNOWFLAKE_INTELLIGENCE
-    COMMENT = 'Snowflake Intelligence agents';
+CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS
+    COMMENT = 'DEMO: MerchMasters - Project schema for agents and procedures | Author: SE Community | Expires: 2025-12-31';
 
-CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_INTELLIGENCE.AGENTS
-    COMMENT = 'Cortex Agents for Snowflake Intelligence';
-
-USE SCHEMA SNOWFLAKE_INTELLIGENCE.AGENTS;
+USE SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
 
 -- ============================================================================
 -- CREATE CORTEX AGENT
@@ -127,4 +127,13 @@ CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
   $$;
 
 -- Grant usage on the agent
-GRANT USAGE ON AGENT SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;
+GRANT USAGE ON AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT TO ROLE PUBLIC;
+
+-- ============================================================================
+-- ADD AGENT TO SNOWFLAKE INTELLIGENCE OBJECT
+-- ============================================================================
+-- This makes the agent visible in the Snowflake Intelligence UI
+-- The Snowflake Intelligence object is created in deploy_all.sql (requires ACCOUNTADMIN)
+
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    ADD AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;

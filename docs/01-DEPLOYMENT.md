@@ -1,7 +1,7 @@
 # Deployment Guide - MerchMasters
 
 **Author:** SE Community  
-**Last Updated:** 2025-12-01  
+**Last Updated:** 2025-12-02  
 **Expires:** 2025-12-31
 
 ---
@@ -151,11 +151,17 @@ ALTER WAREHOUSE SFE_MERCHMASTERS_WH RESUME;
 
 ## Post-Deployment
 
-After successful deployment:
+After successful deployment, you have two options:
 
-1. **Access Snowflake Intelligence:** Navigate to Intelligence in Snowsight
-2. **Select the Agent:** Choose SFE_MERCH_INTELLIGENCE_AGENT
-3. **Start Asking Questions:** See `docs/02-USAGE.md` for sample queries
+**Option 1: The Leaderboard (Streamlit Dashboard)**
+1. Navigate to **Projects** → **Streamlit** in Snowsight
+2. Select **SFE_THE_LEADERBOARD**
+3. Explore the interactive merchandise analytics!
+
+**Option 2: Snowflake Intelligence (Cortex Analyst)**
+1. Navigate to **AI & ML** → **Intelligence** in Snowsight
+2. Select **SFE_MERCH_INTELLIGENCE_AGENT**
+3. Ask natural language questions about merchandise performance!
 
 ---
 
@@ -170,11 +176,15 @@ After successful deployment:
 
 | Object Type | Name | Purpose |
 |-------------|------|---------|
+| Snowflake Intelligence | SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT | Agent visibility control |
 | API Integration | SFE_MERCHMASTERS_GIT_API_INTEGRATION | GitHub access |
 | Git Repository | sfe_merchmasters_repo | Code reference |
 | Warehouse | SFE_MERCHMASTERS_WH | Demo compute |
 | Schema | SFE_MERCH_RAW | Raw data |
 | Schema | SFE_MERCH_STAGING | Cleaned data |
 | Schema | SFE_MERCH_ANALYTICS | Star schema |
+| Schema | MERCHMASTERS | Agent and procedures |
 | Semantic View | SFE_SV_MERCH_INTELLIGENCE | Cortex Analyst model |
+| Agent | SFE_MERCH_INTELLIGENCE_AGENT | Natural language interface |
+| Streamlit App | SFE_THE_LEADERBOARD | Interactive dashboard |
 

@@ -8,11 +8,35 @@
 
 ## Overview
 
-This guide explains how to use the MerchMasters demo to showcase Snowflake Intelligence (Cortex Analyst) for tournament merchandise analytics.
+This guide explains how to use the MerchMasters demo, featuring two ways to explore tournament merchandise analytics:
+
+1. **Snowflake Intelligence (Cortex Analyst)** - Ask questions in natural language
+2. **The Leaderboard (Streamlit Dashboard)** - Interactive visual analytics
 
 ---
 
-## Accessing Snowflake Intelligence
+## Option 1: The Leaderboard Dashboard
+
+For visual, interactive analytics:
+
+1. Log into [Snowsight](https://app.snowflake.com)
+2. Navigate to **Projects** → **Streamlit**
+3. Select **SFE_THE_LEADERBOARD**
+4. Explore the interactive dashboard!
+
+### Dashboard Sections
+
+| Section | What You'll See |
+|---------|-----------------|
+| **Executive Summary** | KPIs with YoY comparison |
+| **Sales Performance** | Daily trends, category breakdown |
+| **Inventory Status** | Stock alerts, items needing attention |
+| **Product Analysis** | Top sellers, vendor performance |
+| **Location Analysis** | Store-by-store comparison |
+
+---
+
+## Option 2: Snowflake Intelligence
 
 ### Step 1: Navigate to Intelligence
 

@@ -1,7 +1,7 @@
 # Cleanup Guide - MerchMasters
 
 **Author:** SE Community  
-**Last Updated:** 2025-12-01  
+**Last Updated:** 2025-12-02  
 **Expires:** 2025-12-31
 
 ---
@@ -29,27 +29,42 @@ Or copy the cleanup script directly from `sql/99_cleanup/teardown_all.sql`.
 
 If the Git repository is no longer available, run these commands manually:
 
-### Step 1: Drop Demo Schemas
+### Step 1: Remove Agent from Snowflake Intelligence Object
 
 ```sql
-USE ROLE ACCOUNTADMIN;
+USE ROLE SYSADMIN;
+
+-- Remove agent from visibility (must be done before dropping agent)
+ALTER SNOWFLAKE INTELLIGENCE IF EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    REMOVE AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
+
+-- Drop the agent
+DROP AGENT IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
+```
+
+### Step 2: Drop Streamlit App and Demo Schemas
+
+```sql
+-- Drop Streamlit dashboard (The Leaderboard)
+DROP STREAMLIT IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_THE_LEADERBOARD;
 
 -- Drop demo schemas (preserves SNOWFLAKE_EXAMPLE database)
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW CASCADE;
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING CASCADE;
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS CASCADE;
+DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS CASCADE;
 
 -- Note: SEMANTIC_MODELS schema is shared - only drop the specific view
 DROP SEMANTIC VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE;
 ```
 
-### Step 2: Drop Demo Warehouse
+### Step 3: Drop Demo Warehouse
 
 ```sql
 DROP WAREHOUSE IF EXISTS SFE_MERCHMASTERS_WH;
 ```
 
-### Step 3: Drop Git Repository (Optional)
+### Step 4: Drop Git Repository (Optional)
 
 ```sql
 -- Drop the Git repository reference
@@ -59,12 +74,13 @@ DROP GIT REPOSITORY IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merch
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS;
 ```
 
-### Step 4: Preserve Shared Infrastructure
+### Step 5: Preserve Shared Infrastructure
 
 **DO NOT DROP** these objects as they may be used by other demos:
 
 - `SNOWFLAKE_EXAMPLE` database
 - `SNOWFLAKE_EXAMPLE.GIT_REPOS` schema (if exists)
+- `SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT` (account-level, shared by all agents)
 - `SFE_*` API integrations (shared across demos)
 
 ---
@@ -95,6 +111,7 @@ The cleanup process preserves:
 | `SNOWFLAKE_EXAMPLE` database | Shared by all SE demos |
 | `SNOWFLAKE_EXAMPLE.GIT_REPOS` schema | Shared Git repositories |
 | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS` schema | May contain other semantic views |
+| `SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT` | Account-level, shared by all agents |
 | `SFE_*` API Integrations | May be used by other demos |
 
 ---

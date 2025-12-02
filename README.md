@@ -69,13 +69,15 @@ Follow these steps in order:
 
 | Object Type | Name | Purpose |
 |-------------|------|---------|
+| **Snowflake Intelligence** | `SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT` | Agent visibility control |
 | **API Integration** | `SFE_MERCHMASTERS_GIT_API_INTEGRATION` | GitHub access |
 | **Warehouse** | `SFE_MERCHMASTERS_WH` | Demo compute (X-SMALL) |
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW` | Raw data landing |
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING` | Cleaned data |
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS` | Star schema |
+| **Schema** | `SNOWFLAKE_EXAMPLE.MERCHMASTERS` | Agent and procedures |
 | **Semantic View** | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE` | Cortex Analyst model |
-| **Agent** | `SFE_MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
+| **Agent** | `SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
 | **Streamlit App** | `SFE_THE_LEADERBOARD` | Interactive merchandise dashboard |
 
 ### Data Model
@@ -184,12 +186,18 @@ See `diagrams/` for detailed architecture diagrams.
 To remove all demo objects, copy and run the contents of `sql/99_cleanup/teardown_all.sql` in Snowsight, or run manually:
 
 ```sql
+-- Remove agent from Snowflake Intelligence visibility
+ALTER SNOWFLAKE INTELLIGENCE IF EXISTS SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+    REMOVE AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
+
 -- Remove demo-specific objects (preserves SNOWFLAKE_EXAMPLE database)
+DROP AGENT IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW CASCADE;
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING CASCADE;
 DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS CASCADE;
+DROP SCHEMA IF EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS CASCADE;
 DROP WAREHOUSE IF EXISTS SFE_MERCHMASTERS_WH;
--- Note: API Integration and Git schema preserved for other demos
+-- Note: API Integration, Git schema, and Snowflake Intelligence object preserved
 ```
 
 ---

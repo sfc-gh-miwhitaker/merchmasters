@@ -1,7 +1,7 @@
 # Data Flow - MerchMasters
 
 **Author:** SE Community  
-**Last Updated:** 2025-12-01  
+**Last Updated:** 2025-12-02  
 **Expires:** 2025-12-31 (30 days)  
 **Status:** Reference Implementation
 
@@ -48,7 +48,7 @@ flowchart TB
         SV[SFE_SV_MERCH_INTELLIGENCE<br/>Semantic View]
     end
     
-    subgraph AGENT["snowflake_intelligence.agents"]
+    subgraph AGENT["MERCHMASTERS Schema"]
         AI[SFE_MERCH_INTELLIGENCE_AGENT<br/>Cortex Analyst]
     end
     
@@ -133,7 +133,8 @@ flowchart TB
 #### SFE_MERCH_INTELLIGENCE_AGENT
 - **Purpose:** Natural language interface for merchandise queries
 - **Technology:** Snowflake Cortex Analyst
-- **Location:** `SNOWFLAKE_INTELLIGENCE.AGENTS.SFE_MERCH_INTELLIGENCE_AGENT`
+- **Location:** `SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT`
+- **Visibility:** Added to `SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT` for UI access
 - **Sample Questions:** Maps 1:1 to verified queries in semantic view
 
 ## Data Transformation Summary
