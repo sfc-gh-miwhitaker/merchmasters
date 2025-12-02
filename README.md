@@ -76,7 +76,7 @@ Follow these steps in order:
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS` | Star schema |
 | **Semantic View** | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE` | Cortex Analyst model |
 | **Agent** | `SFE_MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
-| **Streamlit App** | `SFE_MERCH_DASHBOARD` | Interactive merchandise dashboard |
+| **Streamlit App** | `SFE_THE_LEADERBOARD` | Interactive merchandise dashboard |
 
 ### Data Model
 
@@ -102,7 +102,7 @@ After deployment, access the Cortex Analyst agent:
 For a visual, interactive experience:
 
 1. Navigate to **Projects** → **Streamlit** in Snowsight
-2. Select **SFE_MERCH_DASHBOARD**
+2. Select **SFE_THE_LEADERBOARD**
 3. Explore the interactive merchandise analytics!
 
 ### Dashboard Features

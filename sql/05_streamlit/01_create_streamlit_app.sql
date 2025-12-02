@@ -10,7 +10,7 @@
  * 
  * OBJECTS CREATED:
  *   - SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_STREAMLIT_STAGE (Stage)
- *   - SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_MERCH_DASHBOARD (Streamlit App)
+ *   - SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_THE_LEADERBOARD (Streamlit App)
  * 
  * DASHBOARD SECTIONS:
  *   1. Executive Summary - KPIs and high-level metrics
@@ -52,16 +52,16 @@ COPY FILES
 -- ============================================================================
 -- CREATE STREAMLIT APP
 -- ============================================================================
-CREATE OR REPLACE STREAMLIT SFE_MERCH_DASHBOARD
+CREATE OR REPLACE STREAMLIT SFE_THE_LEADERBOARD
     ROOT_LOCATION = '@SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_STREAMLIT_STAGE'
     MAIN_FILE = 'streamlit_app.py'
     QUERY_WAREHOUSE = SFE_MERCHMASTERS_WH
-    COMMENT = 'DEMO: MerchMasters - Tournament Merchandise Dashboard | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - The Leaderboard Dashboard | Author: SE Community | Expires: 2025-12-31';
 
 -- ============================================================================
 -- GRANT ACCESS TO STREAMLIT APP
 -- ============================================================================
-GRANT USAGE ON STREAMLIT SFE_MERCH_DASHBOARD TO ROLE PUBLIC;
+GRANT USAGE ON STREAMLIT SFE_THE_LEADERBOARD TO ROLE PUBLIC;
 
 /******************************************************************************
  * STREAMLIT DEPLOYMENT COMPLETE
@@ -69,7 +69,7 @@ GRANT USAGE ON STREAMLIT SFE_MERCH_DASHBOARD TO ROLE PUBLIC;
  * To access the dashboard:
  *   1. Navigate to Snowsight
  *   2. Click "Projects" → "Streamlit"
- *   3. Select "SFE_MERCH_DASHBOARD"
+ *   3. Select "SFE_THE_LEADERBOARD"
  *   4. The dashboard will open in a new tab
  * 
  * Dashboard Features:

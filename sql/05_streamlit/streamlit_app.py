@@ -1,7 +1,8 @@
 """
-MerchMasters: Tournament Merchandise Dashboard
-===============================================
+The Leaderboard: Tournament Merchandise Dashboard
+=================================================
 A Streamlit in Snowflake dashboard for golf shop merchandise analytics.
+See who's winning the merch game.
 
 Author: SE Community
 Expires: 2025-12-31
@@ -15,8 +16,8 @@ from snowflake.snowpark.context import get_active_session
 # PAGE CONFIGURATION
 # =============================================================================
 st.set_page_config(
-    page_title="MerchMasters Dashboard",
-    page_icon="⛳",
+    page_title="The Leaderboard",
+    page_icon="🏆",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -408,7 +409,7 @@ with st.sidebar:
     
     st.markdown("### ℹ️ About")
     st.markdown("""
-    **MerchMasters Dashboard**  
+    **The Leaderboard**  
     Tournament Merchandise Analytics
     
     *Author:* SE Community  
@@ -420,8 +421,8 @@ with st.sidebar:
 # =============================================================================
 st.markdown("""
 <div class="main-header">
-    <h1>⛳ MerchMasters Dashboard</h1>
-    <p>Tournament Merchandise Intelligence • Real-time Analytics</p>
+    <h1>🏆 The Leaderboard</h1>
+    <p>Tournament Merchandise Intelligence • See Who's Winning</p>
 </div>
 """, unsafe_allow_html=True)
 
@@ -656,7 +657,7 @@ if show_locations:
 st.markdown("---")
 st.markdown("""
 <div style="text-align: center; color: #666; font-size: 0.875rem;">
-    <p>MerchMasters Dashboard • Built with Streamlit in Snowflake • Author: SE Community</p>
+    <p>🏆 The Leaderboard • Built with Streamlit in Snowflake • Author: SE Community</p>
     <p>⛳ The Championship Invitational • Tournament Merchandise Intelligence</p>
 </div>
 """, unsafe_allow_html=True)

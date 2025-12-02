@@ -12,7 +12,7 @@
  *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
  *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
  *   - Agent: SFE_MERCH_INTELLIGENCE_AGENT
- *   - Streamlit App: SFE_MERCH_DASHBOARD (in SFE_MERCH_ANALYTICS schema)
+ *   - Streamlit App: SFE_THE_LEADERBOARD (in SFE_MERCH_ANALYTICS schema)
  *   - Warehouse: SFE_MERCHMASTERS_WH
  *   - Git Repository: sfe_merchmasters_repo
  *   - Git Schema: MERCHMASTERS_GIT_REPOS
@@ -45,7 +45,7 @@ DROP SEMANTIC VIEW IF EXISTS SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTE
 -- ============================================================================
 -- REMOVE STREAMLIT APP (Explicitly before schema drop for clarity)
 -- ============================================================================
-DROP STREAMLIT IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_MERCH_DASHBOARD;
+DROP STREAMLIT IF EXISTS SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_THE_LEADERBOARD;
 
 -- ============================================================================
 -- REMOVE DEMO SCHEMAS (CASCADE drops all contained objects)

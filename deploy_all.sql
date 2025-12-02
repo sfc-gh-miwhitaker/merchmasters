@@ -25,7 +25,7 @@
  *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
  *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
  *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT
- *   - Streamlit Dashboard: SFE_MERCH_DASHBOARD
+ *   - Streamlit Dashboard: SFE_THE_LEADERBOARD
  * 
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
@@ -182,7 +182,7 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
  * 
  * Next Steps - Option 2: Streamlit Dashboard
  *   1. Navigate to Projects → Streamlit in Snowsight
- *   2. Select SFE_MERCH_DASHBOARD
+ *   2. Select SFE_THE_LEADERBOARD
  *   3. Explore the interactive merchandise analytics dashboard!
  * 
  * To verify deployment, run these queries in a separate worksheet:

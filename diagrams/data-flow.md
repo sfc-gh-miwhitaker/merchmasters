@@ -53,7 +53,7 @@ flowchart TB
     end
     
     subgraph STREAMLIT["SFE_MERCH_ANALYTICS Schema"]
-        SIS[SFE_MERCH_DASHBOARD<br/>Streamlit App]
+        SIS[SFE_THE_LEADERBOARD<br/>Streamlit App]
     end
     
     GEN -->|INSERT| RP & RL & RT & RS & RI
