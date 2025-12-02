@@ -52,6 +52,10 @@ flowchart TB
         AI[SFE_MERCH_INTELLIGENCE_AGENT<br/>Cortex Analyst]
     end
     
+    subgraph STREAMLIT["SFE_MERCH_ANALYTICS Schema"]
+        SIS[SFE_MERCH_DASHBOARD<br/>Streamlit App]
+    end
+    
     GEN -->|INSERT| RP & RL & RT & RS & RI
     
     RP -->|Clean & Type| SP
@@ -69,6 +73,7 @@ flowchart TB
     
     DP & DL & DT & DD & FS & FI -->|Join| SV
     SV -->|Powers| AI
+    DP & DL & DT & DD & FS & FI -->|Query| SIS
 ```
 
 ## Component Descriptions

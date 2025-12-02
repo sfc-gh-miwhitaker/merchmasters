@@ -76,6 +76,7 @@ Follow these steps in order:
 | **Schema** | `SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS` | Star schema |
 | **Semantic View** | `SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE` | Cortex Analyst model |
 | **Agent** | `SFE_MERCH_INTELLIGENCE_AGENT` | Snowflake Intelligence interface |
+| **Streamlit App** | `SFE_MERCH_DASHBOARD` | Interactive merchandise dashboard |
 
 ### Data Model
 
@@ -93,6 +94,26 @@ After deployment, access the Cortex Analyst agent:
 1. Navigate to **Snowflake Intelligence** in Snowsight
 2. Select **SFE_MERCH_INTELLIGENCE_AGENT**
 3. Ask questions in natural language!
+
+---
+
+## Using the Streamlit Dashboard
+
+For a visual, interactive experience:
+
+1. Navigate to **Projects** → **Streamlit** in Snowsight
+2. Select **SFE_MERCH_DASHBOARD**
+3. Explore the interactive merchandise analytics!
+
+### Dashboard Features
+
+| Section | Description |
+|---------|-------------|
+| **Executive Summary** | KPIs with YoY comparison (Revenue, Units, Margin) |
+| **Sales Performance** | Daily trends by tournament day, category breakdown |
+| **Inventory Status** | Stock alerts (Critical/Low), items needing attention |
+| **Product Analysis** | Top sellers, vendor performance |
+| **Location Analysis** | Store-by-store revenue comparison |
 
 ### Sample Questions
 
@@ -126,6 +147,7 @@ Synthetic Data → RAW Schema → STAGING Schema → ANALYTICS Schema
 - **100% Snowflake Native** - No external dependencies
 - **Cortex Analyst** - Natural language to SQL
 - **Semantic Views** - Business-friendly data definitions
+- **Streamlit in Snowflake** - Interactive dashboards
 - **Synthetic Data** - Realistic POS and inventory patterns
 
 See `diagrams/` for detailed architecture diagrams.
@@ -192,6 +214,7 @@ merchmasters/
     ├── 02_data/
     ├── 03_transformations/
     ├── 04_cortex/
+    ├── 05_streamlit/           # Streamlit dashboard
     └── 99_cleanup/
 ```
 

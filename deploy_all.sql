@@ -25,6 +25,7 @@
  *   - Schemas: SFE_MERCH_RAW, SFE_MERCH_STAGING, SFE_MERCH_ANALYTICS
  *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
  *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT
+ *   - Streamlit Dashboard: SFE_MERCH_DASHBOARD
  * 
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
@@ -146,7 +147,14 @@ EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmaster
 EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/04_cortex/02_create_agent.sql;
 
 -- ============================================================================
--- SECTION 9: GRANT PERMISSIONS
+-- SECTION 9: DEPLOY STREAMLIT DASHBOARD
+-- ============================================================================
+-- Creates interactive merchandise analytics dashboard
+
+EXECUTE IMMEDIATE FROM @SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo/branches/main/sql/05_streamlit/01_create_streamlit_app.sql;
+
+-- ============================================================================
+-- SECTION 10: GRANT PERMISSIONS
 -- ============================================================================
 -- Allow PUBLIC role to use demo objects
 
@@ -167,10 +175,15 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
 /******************************************************************************
  * DEPLOYMENT COMPLETE
  * 
- * Next Steps:
+ * Next Steps - Option 1: Snowflake Intelligence (Cortex Analyst)
  *   1. Navigate to Snowflake Intelligence in Snowsight
  *   2. Select SFE_MERCH_INTELLIGENCE_AGENT
- *   3. Start asking questions about merchandise performance!
+ *   3. Ask natural language questions about merchandise performance!
+ * 
+ * Next Steps - Option 2: Streamlit Dashboard
+ *   1. Navigate to Projects → Streamlit in Snowsight
+ *   2. Select SFE_MERCH_DASHBOARD
+ *   3. Explore the interactive merchandise analytics dashboard!
  * 
  * To verify deployment, run these queries in a separate worksheet:
  *   SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES;
