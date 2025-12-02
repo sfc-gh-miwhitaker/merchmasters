@@ -68,11 +68,11 @@ FACTS (
         WITH SYNONYMS ('cost', 'cogs', 'cost of goods'),
     sales.gross_margin AS gross_margin
         WITH SYNONYMS ('margin', 'profit', 'gross profit'),
-    products.product_cost AS unit_cost
+    products.unit_cost AS unit_cost
         WITH SYNONYMS ('cost per unit', 'wholesale cost'),
-    products.product_price AS retail_price
+    products.retail_price AS retail_price
         WITH SYNONYMS ('price', 'msrp', 'list price'),
-    products.product_margin_pct AS margin_pct
+    products.margin_pct AS margin_pct
         WITH SYNONYMS ('margin percent', 'markup'),
     inventory.beginning_qty AS beginning_qty
         WITH SYNONYMS ('opening inventory', 'start quantity'),
