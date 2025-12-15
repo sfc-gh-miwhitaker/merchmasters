@@ -17,7 +17,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -42,7 +42,7 @@ CREATE OR REPLACE TABLE SFE_RAW_PRODUCTS (
     retail_price        NUMBER(10,2),
     is_dated_year       BOOLEAN DEFAULT FALSE,
     created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'DEMO: MerchMasters - Product catalog | Author: SE Community | Expires: 2025-12-31';
+) COMMENT = 'DEMO: MerchMasters - Product catalog | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- LOCATIONS TABLE
@@ -54,7 +54,7 @@ CREATE OR REPLACE TABLE SFE_RAW_LOCATIONS (
     capacity_sqft       INTEGER,
     is_active           BOOLEAN DEFAULT TRUE,
     created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'DEMO: MerchMasters - Retail locations | Author: SE Community | Expires: 2025-12-31';
+) COMMENT = 'DEMO: MerchMasters - Retail locations | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- TOURNAMENTS TABLE
@@ -66,7 +66,7 @@ CREATE OR REPLACE TABLE SFE_RAW_TOURNAMENTS (
     start_date          DATE NOT NULL,
     end_date            DATE NOT NULL,
     created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'DEMO: MerchMasters - Tournament calendar | Author: SE Community | Expires: 2025-12-31';
+) COMMENT = 'DEMO: MerchMasters - Tournament calendar | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- SALES TRANSACTIONS TABLE
@@ -84,7 +84,7 @@ CREATE OR REPLACE TABLE SFE_RAW_SALES (
     payment_method      VARCHAR(20),
     tournament_id       INTEGER,
     created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'DEMO: MerchMasters - POS transactions | Author: SE Community | Expires: 2025-12-31';
+) COMMENT = 'DEMO: MerchMasters - POS transactions | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- INVENTORY SNAPSHOTS TABLE
@@ -100,7 +100,7 @@ CREATE OR REPLACE TABLE SFE_RAW_INVENTORY (
     ending_qty          INTEGER DEFAULT 0,
     tournament_id       INTEGER,
     created_at          TIMESTAMP_NTZ DEFAULT CURRENT_TIMESTAMP()
-) COMMENT = 'DEMO: MerchMasters - Daily inventory snapshots | Author: SE Community | Expires: 2025-12-31';
+) COMMENT = 'DEMO: MerchMasters - Daily inventory snapshots | Author: SE Community | Expires: 2026-01-31';
 
 -- Tables ready for data load
 

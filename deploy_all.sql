@@ -6,9 +6,9 @@
  * PROJECT_NAME: MerchMasters
  * AUTHOR: SE Community
  * CREATED: 2025-12-01
- * EXPIRES: 2025-12-31
+ * EXPIRES: 2026-01-31
  * PURPOSE: Tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)
- * LAST_UPDATED: 2025-12-02
+ * LAST_UPDATED: 2025-12-15
  * GITHUB_REPO: https://github.com/sfc-gh-miwhitaker/merchmasters
  * 
  * INSTRUCTIONS:
@@ -31,7 +31,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -45,12 +45,12 @@ USE WAREHOUSE COMPUTE_WH;
 -- ============================================================================
 -- SECTION 0: EXPIRATION CHECK
 -- ============================================================================
--- This demo expires on 2025-12-31. After this date, deployment will be blocked.
+-- This demo expires on 2026-01-31. After this date, deployment will be blocked.
 
 EXECUTE IMMEDIATE
 $$
 DECLARE
-    v_expiration_date DATE := '2025-12-31';
+    v_expiration_date DATE := '2026-01-31';
     demo_expired EXCEPTION (-20001, 'DEMO EXPIRED: This demonstration project expired. The code may contain outdated Snowflake syntax. Please contact the SE team for an updated version.');
 BEGIN
     IF (CURRENT_DATE() > v_expiration_date) THEN
@@ -85,7 +85,7 @@ CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
     API_PROVIDER = git_https_api
     API_ALLOWED_PREFIXES = ('https://github.com/sfc-gh-miwhitaker/')
     ENABLED = TRUE
-    COMMENT = 'DEMO: MerchMasters - Git integration for public repo access | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Git integration for public repo access | Author: SE Community | Expires: 2026-01-31';
 
 -- Grant usage to SYSADMIN so it can create Git repos using this integration
 GRANT USAGE ON INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION TO ROLE SYSADMIN;
@@ -101,7 +101,7 @@ CREATE DATABASE IF NOT EXISTS SNOWFLAKE_EXAMPLE
     COMMENT = 'DEMO: Repository for example/demo projects - NOT FOR PRODUCTION';
 
 CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
-    COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- SECTION 4: CREATE GIT REPOSITORY REFERENCE
@@ -110,7 +110,7 @@ CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
 CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo
     API_INTEGRATION = SFE_MERCHMASTERS_GIT_API_INTEGRATION
     ORIGIN = 'https://github.com/sfc-gh-miwhitaker/merchmasters'
-    COMMENT = 'DEMO: MerchMasters - Public repo for tournament merchandise intelligence | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Public repo for tournament merchandise intelligence | Author: SE Community | Expires: 2026-01-31';
 
 -- Fetch latest from repository
 ALTER GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo FETCH;
@@ -125,7 +125,7 @@ CREATE OR REPLACE WAREHOUSE SFE_MERCHMASTERS_WH
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
     INITIALLY_SUSPENDED = FALSE
-    COMMENT = 'DEMO: MerchMasters - Demo compute warehouse | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Demo compute warehouse | Author: SE Community | Expires: 2026-01-31';
 
 -- Set warehouse context for subsequent operations
 USE WAREHOUSE SFE_MERCHMASTERS_WH;

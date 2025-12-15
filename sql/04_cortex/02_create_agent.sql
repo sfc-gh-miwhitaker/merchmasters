@@ -25,7 +25,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -39,7 +39,7 @@ USE DATABASE SNOWFLAKE_EXAMPLE;
 -- CREATE MERCHMASTERS SCHEMA FOR AGENT (if not exists)
 -- ============================================================================
 CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS
-    COMMENT = 'DEMO: MerchMasters - Project schema for agents and procedures | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Project schema for agents and procedures | Author: SE Community | Expires: 2026-01-31';
 
 USE SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
 
@@ -47,7 +47,7 @@ USE SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
 -- CREATE CORTEX AGENT
 -- ============================================================================
 CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
-  COMMENT = 'DEMO: MerchMasters - Tournament merchandise analytics agent | Author: SE Community | Expires: 2025-12-31'
+  COMMENT = 'DEMO: MerchMasters - Tournament merchandise analytics agent | Author: SE Community | Expires: 2026-01-31'
   PROFILE = '{"display_name": "Merchandise Intelligence", "color": "green"}'
   FROM SPECIFICATION
   $$

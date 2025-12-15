@@ -17,7 +17,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -32,7 +32,7 @@ USE SCHEMA SFE_MERCH_STAGING;
 -- STAGING: PRODUCTS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_PRODUCTS
-COMMENT = 'DEMO: MerchMasters - Staged product catalog | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Staged product catalog | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     TRIM(style_number) AS style_number,
@@ -54,7 +54,7 @@ WHERE style_number IS NOT NULL;
 -- STAGING: LOCATIONS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_LOCATIONS
-COMMENT = 'DEMO: MerchMasters - Staged retail locations | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Staged retail locations | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     location_id,
@@ -70,7 +70,7 @@ WHERE location_id IS NOT NULL;
 -- STAGING: TOURNAMENTS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_TOURNAMENTS
-COMMENT = 'DEMO: MerchMasters - Staged tournament calendar | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Staged tournament calendar | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     tournament_id,
@@ -88,7 +88,7 @@ WHERE tournament_id IS NOT NULL
 -- STAGING: SALES
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_SALES
-COMMENT = 'DEMO: MerchMasters - Staged sales transactions | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Staged sales transactions | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     transaction_id,
@@ -114,7 +114,7 @@ WHERE transaction_id IS NOT NULL
 -- STAGING: INVENTORY
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_INVENTORY
-COMMENT = 'DEMO: MerchMasters - Staged inventory snapshots | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Staged inventory snapshots | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     snapshot_date,

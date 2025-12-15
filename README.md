@@ -1,17 +1,17 @@
 ![Reference Implementation](https://img.shields.io/badge/Reference-Implementation-blue)
 ![Ready to Run](https://img.shields.io/badge/Ready%20to%20Run-Yes-green)
-![Expires](https://img.shields.io/badge/Expires-2025--12--31-orange)
+![Expires](https://img.shields.io/badge/Expires-2026--01--31-orange)
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=flat&logo=snowflake&logoColor=white)
 
 # MerchMasters: Tournament Merchandise Intelligence
 
-> **DEMONSTRATION PROJECT - EXPIRES: 2025-12-31**  
+> **DEMONSTRATION PROJECT - EXPIRES: 2026-01-31**  
 > This demo uses Snowflake features current as of December 2025.  
 > After expiration, this repository will be archived and made private.
 
 **Author:** SE Community  
 **Purpose:** Reference implementation for tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)  
-**Created:** 2025-12-01 | **Expires:** 2025-12-31 (30 days) | **Status:** ACTIVE
+**Created:** 2025-12-01 | **Expires:** 2026-01-31 (30 days) | **Status:** ACTIVE
 
 ---
 
@@ -238,5 +238,5 @@ This is a reference implementation for demonstration purposes. For questions or 
 
 ---
 
-**Built with Snowflake Intelligence** | **Author: SE Community** | **Expires: 2025-12-31**
+**Built with Snowflake Intelligence** | **Author: SE Community** | **Expires: 2026-01-31**
 

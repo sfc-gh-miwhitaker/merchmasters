@@ -24,7 +24,7 @@
  *   - Snowflake Intelligence object (account-level, shared)
  *   - SFE_* API integrations (may be shared)
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================

@@ -18,7 +18,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -33,7 +33,7 @@ USE SCHEMA SFE_MERCH_ANALYTICS;
 -- DIMENSION: PRODUCTS
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_DIM_PRODUCTS
-COMMENT = 'DEMO: MerchMasters - Product dimension | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Product dimension | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     style_number,
@@ -55,7 +55,7 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_PRODUCTS;
 -- DIMENSION: LOCATIONS
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_DIM_LOCATIONS
-COMMENT = 'DEMO: MerchMasters - Location dimension | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Location dimension | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     location_id,
@@ -71,7 +71,7 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_LOCATIONS;
 -- DIMENSION: TOURNAMENTS
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_DIM_TOURNAMENTS
-COMMENT = 'DEMO: MerchMasters - Tournament dimension | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Tournament dimension | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     tournament_id,
@@ -93,7 +93,7 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_TOURNAMENTS;
 -- DIMENSION: DATES
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_DIM_DATES
-COMMENT = 'DEMO: MerchMasters - Date dimension with tournament context | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Date dimension with tournament context | Author: SE Community | Expires: 2026-01-31'
 AS
 WITH RECURSIVE date_spine AS (
     -- Anchor: start with first day of each tournament
@@ -162,7 +162,7 @@ FROM tournament_dates td;
 -- FACT: SALES
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_FCT_SALES
-COMMENT = 'DEMO: MerchMasters - Sales fact table | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Sales fact table | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     s.transaction_id,
@@ -190,7 +190,7 @@ LEFT JOIN SFE_DIM_PRODUCTS p ON s.style_number = p.style_number;
 -- FACT: INVENTORY
 -- ============================================================================
 CREATE OR REPLACE TABLE SFE_FCT_INVENTORY
-COMMENT = 'DEMO: MerchMasters - Inventory fact table | Author: SE Community | Expires: 2025-12-31'
+COMMENT = 'DEMO: MerchMasters - Inventory fact table | Author: SE Community | Expires: 2026-01-31'
 AS
 SELECT 
     ROW_NUMBER() OVER (ORDER BY i.snapshot_date, i.location_id, i.style_number) AS inventory_id,

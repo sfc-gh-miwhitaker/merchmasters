@@ -15,7 +15,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -152,7 +152,7 @@ METRICS (
         WITH SYNONYMS ('number of products', 'sku count', 'product variety')
 )
 
-COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analytics | Author: SE Community | Expires: 2025-12-31';
+COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analytics | Author: SE Community | Expires: 2026-01-31';
 
 
 /******************************************************************************

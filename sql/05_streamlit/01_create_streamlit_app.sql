@@ -22,7 +22,7 @@
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
  * 
- * Author: SE Community | Expires: 2025-12-31
+ * Author: SE Community | Expires: 2026-01-31
  ******************************************************************************/
 
 -- ============================================================================
@@ -38,7 +38,7 @@ USE SCHEMA SFE_MERCH_ANALYTICS;
 -- ============================================================================
 CREATE OR REPLACE STAGE SFE_STREAMLIT_STAGE
     DIRECTORY = (ENABLE = TRUE)
-    COMMENT = 'DEMO: MerchMasters - Stage for Streamlit app files | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - Stage for Streamlit app files | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- COPY STREAMLIT APP FROM GIT REPOSITORY TO STAGE
@@ -52,11 +52,13 @@ COPY FILES
 -- ============================================================================
 -- CREATE STREAMLIT APP
 -- ============================================================================
+-- Modern syntax: Uses FROM parameter instead of legacy ROOT_LOCATION
+-- Benefits: Multi-file editing, Git integration, container runtime support
 CREATE OR REPLACE STREAMLIT SFE_THE_LEADERBOARD
-    ROOT_LOCATION = '@SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_STREAMLIT_STAGE'
+    FROM '@SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_STREAMLIT_STAGE'
     MAIN_FILE = 'streamlit_app.py'
     QUERY_WAREHOUSE = SFE_MERCHMASTERS_WH
-    COMMENT = 'DEMO: MerchMasters - The Leaderboard Dashboard | Author: SE Community | Expires: 2025-12-31';
+    COMMENT = 'DEMO: MerchMasters - The Leaderboard Dashboard | Author: SE Community | Expires: 2026-01-31';
 
 -- ============================================================================
 -- GRANT ACCESS TO STREAMLIT APP
