@@ -1,3 +1,15 @@
+
+> ## ⚠️ DEPRECATED - THIS DEMO HAS EXPIRED
+> 
+> **Expiration Date:** 2025-12-31
+> 
+> This demonstration project has passed its expiration date. The code may contain 
+> outdated Snowflake syntax or deprecated features. Please contact the SE team 
+> for an updated version.
+> 
+> ---
+
+
 ![Reference Implementation](https://img.shields.io/badge/Reference-Implementation-blue)
 ![Ready to Run](https://img.shields.io/badge/Ready%20to%20Run-Yes-green)
 ![Expires](https://img.shields.io/badge/Expires-2026--01--31-orange)
