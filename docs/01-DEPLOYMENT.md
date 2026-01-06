@@ -1,8 +1,8 @@
 # Deployment Guide - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-02  
-**Expires:** 2025-12-31
+**Author:** SE Community
+**Last Updated:** 2025-12-02
+**Expires:** 2026-01-31
 
 ---
 
@@ -187,4 +187,3 @@ After successful deployment, you have two options:
 | Semantic View | SFE_SV_MERCH_INTELLIGENCE | Cortex Analyst model |
 | Agent | SFE_MERCH_INTELLIGENCE_AGENT | Natural language interface |
 | Streamlit App | SFE_THE_LEADERBOARD | Interactive dashboard |
-

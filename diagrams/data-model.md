@@ -1,8 +1,8 @@
 # Data Model - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-01  
-**Expires:** 2025-12-31 (30 days)  
+**Author:** SE Community
+**Last Updated:** 2025-12-01
+**Expires:** 2026-01-31 (30 days)
 **Status:** Reference Implementation
 
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)
@@ -22,7 +22,7 @@ erDiagram
     SFE_DIM_DATES ||--o{ SFE_FCT_SALES : "on date"
     SFE_DIM_DATES ||--o{ SFE_FCT_INVENTORY : "snapshot date"
     SFE_DIM_TOURNAMENTS ||--o{ SFE_DIM_DATES : "contains"
-    
+
     SFE_DIM_PRODUCTS {
         varchar style_number PK
         varchar product_name
@@ -34,14 +34,14 @@ erDiagram
         decimal retail_price
         boolean is_dated_year
     }
-    
+
     SFE_DIM_LOCATIONS {
         int location_id PK
         varchar location_name
         varchar location_type
         int capacity_sqft
     }
-    
+
     SFE_DIM_TOURNAMENTS {
         int tournament_id PK
         varchar tournament_name
@@ -49,7 +49,7 @@ erDiagram
         date start_date
         date end_date
     }
-    
+
     SFE_DIM_DATES {
         int date_key PK
         date full_date
@@ -58,7 +58,7 @@ erDiagram
         boolean is_competition_day
         int tournament_id FK
     }
-    
+
     SFE_FCT_SALES {
         varchar transaction_id PK
         int date_key FK
@@ -70,7 +70,7 @@ erDiagram
         decimal total_amount
         varchar payment_method
     }
-    
+
     SFE_FCT_INVENTORY {
         int inventory_id PK
         int date_key FK
@@ -147,4 +147,3 @@ erDiagram
 ## Change History
 
 See `.cursor/DIAGRAM_CHANGELOG.md` for version history.
-

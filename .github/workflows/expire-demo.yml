@@ -3,7 +3,7 @@
 # =============================================================================
 # Purpose: Automatically archive and make repository private after expiration
 # Author: SE Community
-# Expires: 2025-12-31
+# Expires: 2026-01-31
 #
 # This workflow runs daily and checks if the demo has expired. After expiration:
 # 1. Adds deprecation notice to README
@@ -21,14 +21,14 @@ on:
     # Allow manual trigger for testing
 
 env:
-  EXPIRATION_DATE: '2025-12-31'
+  EXPIRATION_DATE: '2026-01-31'
 
 jobs:
   check-expiration:
     runs-on: ubuntu-latest
     permissions:
       contents: write
-      
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -38,10 +38,10 @@ jobs:
         run: |
           CURRENT_DATE=$(date +%Y-%m-%d)
           EXPIRATION="${{ env.EXPIRATION_DATE }}"
-          
+
           echo "Current date: $CURRENT_DATE"
           echo "Expiration date: $EXPIRATION"
-          
+
           if [[ "$CURRENT_DATE" > "$EXPIRATION" ]]; then
             echo "expired=true" >> $GITHUB_OUTPUT
             echo "::warning::Demo has EXPIRED as of $EXPIRATION"
@@ -58,19 +58,19 @@ jobs:
             # Create deprecation banner
             NOTICE="
           > ## ⚠️ DEPRECATED - THIS DEMO HAS EXPIRED
-          > 
+          >
           > **Expiration Date:** ${{ env.EXPIRATION_DATE }}
-          > 
-          > This demonstration project has passed its expiration date. The code may contain 
-          > outdated Snowflake syntax or deprecated features. Please contact the SE team 
+          >
+          > This demonstration project has passed its expiration date. The code may contain
+          > outdated Snowflake syntax or deprecated features. Please contact the SE team
           > for an updated version.
-          > 
+          >
           > ---
-          
+
           "
             # Prepend notice to README
             echo "$NOTICE" | cat - README.md > temp && mv temp README.md
-            
+
             # Commit the change
             git config user.name "github-actions[bot]"
             git config user.email "github-actions[bot]@users.noreply.github.com"

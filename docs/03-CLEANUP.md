@@ -1,8 +1,8 @@
 # Cleanup Guide - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-02  
-**Expires:** 2025-12-31
+**Author:** SE Community
+**Last Updated:** 2025-12-02
+**Expires:** 2026-01-31
 
 ---
 
@@ -36,7 +36,7 @@ USE ROLE SYSADMIN;
 
 -- Remove agent from visibility (must be done before dropping agent)
 -- Note: May error if Intelligence object doesn't exist - that's OK
-ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
     DROP AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
 
 -- Drop the agent
@@ -177,4 +177,3 @@ If you encounter issues with cleanup:
 1. Check that you're using ACCOUNTADMIN role
 2. Verify the object names match exactly
 3. Review error messages for specific conflicts
-

@@ -1,8 +1,8 @@
 # Auth Flow - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-01  
-**Expires:** 2025-12-31 (30 days)  
+**Author:** SE Community
+**Last Updated:** 2025-12-01
+**Expires:** 2026-01-31 (30 days)
 **Status:** Reference Implementation
 
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)
@@ -23,13 +23,13 @@ sequenceDiagram
     participant SV as Semantic View
     participant WH as SFE_MERCHMASTERS_WH
     participant Data as Analytics Tables
-    
+
     User->>UI: Access Snowflake Intelligence
     UI->>Auth: SSO / Username+Password
     Auth->>Auth: Validate Credentials
     Auth->>Auth: Assign Role (PUBLIC or custom)
     Auth-->>UI: Session Token + Role
-    
+
     User->>UI: Ask "How are golf shirts selling?"
     UI->>Agent: Natural Language Query
     Agent->>Agent: Parse Intent
@@ -42,7 +42,7 @@ sequenceDiagram
     Agent->>Agent: Format Response
     Agent-->>UI: Markdown Response + Citation
     UI-->>User: Display Answer with Sources
-    
+
     Note over Auth,Data: All access governed by Snowflake RBAC<br/>Role determines visible schemas/tables
 ```
 
@@ -162,4 +162,3 @@ Access via: `SNOWFLAKE.ACCOUNT_USAGE.QUERY_HISTORY`
 ## Change History
 
 See `.cursor/DIAGRAM_CHANGELOG.md` for version history.
-

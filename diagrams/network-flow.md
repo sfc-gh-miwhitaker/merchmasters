@@ -1,8 +1,8 @@
 # Network Flow - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-02  
-**Expires:** 2025-12-31 (30 days)  
+**Author:** SE Community
+**Last Updated:** 2025-12-02
+**Expires:** 2026-01-31 (30 days)
 **Status:** Reference Implementation
 
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)
@@ -19,12 +19,12 @@ flowchart TB
         GH[GitHub Repository<br/>sfc-gh-miwhitaker/merchmasters]
         USER[Merchandise Manager<br/>Browser]
     end
-    
+
     subgraph Snowflake["Snowflake Account"]
         subgraph Compute["Compute Layer"]
             WH[SFE_MERCHMASTERS_WH<br/>X-SMALL Warehouse]
         end
-        
+
         subgraph Storage["Storage Layer - SNOWFLAKE_EXAMPLE"]
             GIT[Git Repository Stage<br/>@sfe_merchmasters_repo]
             RAW[(SFE_MERCH_RAW)]
@@ -32,17 +32,17 @@ flowchart TB
             ANA[(SFE_MERCH_ANALYTICS)]
             SEM[(SEMANTIC_MODELS)]
         end
-        
+
         subgraph Intelligence["Snowflake Intelligence"]
             CA[Cortex Analyst<br/>SFE_MERCH_INTELLIGENCE_AGENT]
             SV[Semantic View<br/>SFE_SV_MERCH_INTELLIGENCE]
         end
-        
+
         subgraph Integration["Integration Layer"]
             API[SFE_MERCHMASTERS_GIT_API_INTEGRATION<br/>HTTPS API]
         end
     end
-    
+
     GH -->|HTTPS Clone| API
     API -->|Fetch SQL Files| GIT
     GIT -->|EXECUTE IMMEDIATE FROM| WH
@@ -145,4 +145,3 @@ flowchart TB
 ## Change History
 
 See `.cursor/DIAGRAM_CHANGELOG.md` for version history.
-

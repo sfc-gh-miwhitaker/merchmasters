@@ -1,8 +1,8 @@
 # Data Flow - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-02  
-**Expires:** 2025-12-31 (30 days)  
+**Author:** SE Community
+**Last Updated:** 2025-12-02
+**Expires:** 2026-01-31 (30 days)
 **Status:** Reference Implementation
 
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)
@@ -18,7 +18,7 @@ flowchart TB
     subgraph Sources["Data Generation"]
         GEN[Synthetic Data Generator<br/>SQL GENERATOR Function]
     end
-    
+
     subgraph RAW["SFE_MERCH_RAW Schema"]
         RP[SFE_RAW_PRODUCTS]
         RL[SFE_RAW_LOCATIONS]
@@ -26,7 +26,7 @@ flowchart TB
         RS[SFE_RAW_SALES]
         RI[SFE_RAW_INVENTORY]
     end
-    
+
     subgraph STG["SFE_MERCH_STAGING Schema"]
         SP[SFE_STG_PRODUCTS]
         SL[SFE_STG_LOCATIONS]
@@ -34,7 +34,7 @@ flowchart TB
         SS[SFE_STG_SALES]
         SI[SFE_STG_INVENTORY]
     end
-    
+
     subgraph ANALYTICS["SFE_MERCH_ANALYTICS Schema"]
         DP[SFE_DIM_PRODUCTS]
         DL[SFE_DIM_LOCATIONS]
@@ -43,34 +43,34 @@ flowchart TB
         FS[SFE_FCT_SALES]
         FI[SFE_FCT_INVENTORY]
     end
-    
+
     subgraph SEMANTIC["SEMANTIC_MODELS Schema"]
         SV[SFE_SV_MERCH_INTELLIGENCE<br/>Semantic View]
     end
-    
+
     subgraph AGENT["MERCHMASTERS Schema"]
         AI[SFE_MERCH_INTELLIGENCE_AGENT<br/>Cortex Analyst]
     end
-    
+
     subgraph STREAMLIT["SFE_MERCH_ANALYTICS Schema"]
         SIS[SFE_THE_LEADERBOARD<br/>Streamlit App]
     end
-    
+
     GEN -->|INSERT| RP & RL & RT & RS & RI
-    
+
     RP -->|Clean & Type| SP
     RL -->|Clean & Type| SL
     RT -->|Clean & Type| STS
     RS -->|Clean & Type| SS
     RI -->|Clean & Type| SI
-    
+
     SP -->|Transform| DP
     SL -->|Transform| DL
     STS -->|Transform| DT
     STS -->|Generate| DD
     SS -->|Aggregate| FS
     SI -->|Aggregate| FI
-    
+
     DP & DL & DT & DD & FS & FI -->|Join| SV
     SV -->|Powers| AI
     DP & DL & DT & DD & FS & FI -->|Query| SIS
@@ -150,4 +150,3 @@ flowchart TB
 ## Change History
 
 See `.cursor/DIAGRAM_CHANGELOG.md` for version history.
-

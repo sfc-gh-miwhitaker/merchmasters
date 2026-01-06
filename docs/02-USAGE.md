@@ -1,8 +1,8 @@
 # Usage Guide - MerchMasters
 
-**Author:** SE Community  
-**Last Updated:** 2025-12-01  
-**Expires:** 2025-12-31
+**Author:** SE Community
+**Last Updated:** 2025-12-01
+**Expires:** 2026-01-31
 
 ---
 
@@ -205,7 +205,7 @@ SELECT * FROM SFE_FCT_SALES LIMIT 100;
 SELECT * FROM SFE_FCT_INVENTORY LIMIT 100;
 
 -- Location summary
-SELECT 
+SELECT
     l.location_name,
     COUNT(DISTINCT s.transaction_id) as transactions,
     SUM(s.total_amount) as revenue
@@ -242,4 +242,3 @@ ORDER BY revenue DESC;
 
 1. Check warehouse size (X-SMALL may be slow for complex queries)
 2. Consider scaling up temporarily: `ALTER WAREHOUSE SFE_MERCHMASTERS_WH SET WAREHOUSE_SIZE = 'SMALL';`
-

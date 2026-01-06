@@ -5,7 +5,7 @@ A Streamlit in Snowflake dashboard for golf shop merchandise analytics.
 See who's winning the merch game.
 
 Author: SE Community
-Expires: 2025-12-31
+Expires: 2026-01-31
 """
 
 import streamlit as st
@@ -31,7 +31,7 @@ st.markdown("""
     .stApp {
         background: linear-gradient(180deg, #f8faf8 0%, #e8f5e9 100%);
     }
-    
+
     /* Header styling */
     .main-header {
         background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #388e3c 100%);
@@ -40,7 +40,7 @@ st.markdown("""
         margin-bottom: 1.5rem;
         box-shadow: 0 4px 12px rgba(27, 94, 32, 0.3);
     }
-    
+
     .main-header h1 {
         color: white;
         margin: 0;
@@ -48,13 +48,13 @@ st.markdown("""
         font-weight: 600;
         letter-spacing: -0.5px;
     }
-    
+
     .main-header p {
         color: rgba(255, 255, 255, 0.9);
         margin: 0.5rem 0 0 0;
         font-size: 1rem;
     }
-    
+
     /* KPI Cards */
     .kpi-card {
         background: white;
@@ -64,19 +64,19 @@ st.markdown("""
         border-left: 4px solid #2e7d32;
         transition: transform 0.2s, box-shadow 0.2s;
     }
-    
+
     .kpi-card:hover {
         transform: translateY(-2px);
         box-shadow: 0 4px 16px rgba(0, 0, 0, 0.12);
     }
-    
+
     .kpi-value {
         font-size: 2rem;
         font-weight: 700;
         color: #1b5e20;
         margin: 0;
     }
-    
+
     .kpi-label {
         font-size: 0.875rem;
         color: #666;
@@ -84,19 +84,19 @@ st.markdown("""
         letter-spacing: 0.5px;
         margin-top: 0.25rem;
     }
-    
+
     .kpi-delta-positive {
         color: #2e7d32;
         font-size: 0.875rem;
         font-weight: 500;
     }
-    
+
     .kpi-delta-negative {
         color: #c62828;
         font-size: 0.875rem;
         font-weight: 500;
     }
-    
+
     /* Section headers */
     .section-header {
         font-size: 1.25rem;
@@ -106,7 +106,7 @@ st.markdown("""
         padding-bottom: 0.5rem;
         border-bottom: 2px solid #c8e6c9;
     }
-    
+
     /* Alert cards */
     .alert-critical {
         background: #ffebee;
@@ -115,7 +115,7 @@ st.markdown("""
         border-radius: 6px;
         margin: 0.5rem 0;
     }
-    
+
     .alert-warning {
         background: #fff8e1;
         border-left: 4px solid #f9a825;
@@ -123,7 +123,7 @@ st.markdown("""
         border-radius: 6px;
         margin: 0.5rem 0;
     }
-    
+
     .alert-success {
         background: #e8f5e9;
         border-left: 4px solid #2e7d32;
@@ -131,17 +131,17 @@ st.markdown("""
         border-radius: 6px;
         margin: 0.5rem 0;
     }
-    
+
     /* Data tables */
     .dataframe {
         font-size: 0.875rem;
     }
-    
+
     /* Sidebar */
     .css-1d391kg {
         background: #f1f8e9;
     }
-    
+
     /* Hide Streamlit branding */
     #MainMenu {visibility: hidden;}
     footer {visibility: hidden;}
@@ -165,7 +165,7 @@ session = get_session()
 def get_kpi_summary(tournament_year: int) -> pd.DataFrame:
     """Get high-level KPIs for the selected tournament year."""
     query = f"""
-    SELECT 
+    SELECT
         SUM(total_amount) AS total_revenue,
         SUM(quantity_sold) AS total_units,
         SUM(gross_margin) AS total_margin,
@@ -173,7 +173,7 @@ def get_kpi_summary(tournament_year: int) -> pd.DataFrame:
         AVG(total_amount) AS avg_transaction_value,
         COUNT(DISTINCT style_number) AS products_sold
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     """
@@ -183,14 +183,14 @@ def get_kpi_summary(tournament_year: int) -> pd.DataFrame:
 def get_yoy_comparison() -> pd.DataFrame:
     """Get year-over-year comparison metrics."""
     query = """
-    SELECT 
+    SELECT
         t.tournament_year,
         SUM(s.total_amount) AS revenue,
         SUM(s.quantity_sold) AS units,
         SUM(s.gross_margin) AS margin,
         COUNT(DISTINCT s.transaction_id) AS transactions
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     GROUP BY t.tournament_year
     ORDER BY t.tournament_year
@@ -201,7 +201,7 @@ def get_yoy_comparison() -> pd.DataFrame:
 def get_daily_sales(tournament_year: int) -> pd.DataFrame:
     """Get daily sales trend for the selected tournament."""
     query = f"""
-    SELECT 
+    SELECT
         d.full_date,
         d.tournament_day_label,
         d.day_name,
@@ -209,9 +209,9 @@ def get_daily_sales(tournament_year: int) -> pd.DataFrame:
         SUM(s.quantity_sold) AS units,
         COUNT(DISTINCT s.transaction_id) AS transactions
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_DATES d 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_DATES d
         ON s.date_key = d.date_key
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     GROUP BY d.full_date, d.tournament_day_label, d.day_name
@@ -223,7 +223,7 @@ def get_daily_sales(tournament_year: int) -> pd.DataFrame:
 def get_category_sales(tournament_year: int) -> pd.DataFrame:
     """Get sales breakdown by category."""
     query = f"""
-    SELECT 
+    SELECT
         p.category,
         SUM(s.total_amount) AS revenue,
         SUM(s.quantity_sold) AS units,
@@ -231,9 +231,9 @@ def get_category_sales(tournament_year: int) -> pd.DataFrame:
         COUNT(DISTINCT s.transaction_id) AS transactions,
         COUNT(DISTINCT p.style_number) AS products
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
         ON s.style_number = p.style_number
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     GROUP BY p.category
@@ -245,7 +245,7 @@ def get_category_sales(tournament_year: int) -> pd.DataFrame:
 def get_location_sales(tournament_year: int) -> pd.DataFrame:
     """Get sales breakdown by location."""
     query = f"""
-    SELECT 
+    SELECT
         l.location_name,
         l.location_type,
         SUM(s.total_amount) AS revenue,
@@ -253,9 +253,9 @@ def get_location_sales(tournament_year: int) -> pd.DataFrame:
         COUNT(DISTINCT s.transaction_id) AS transactions,
         AVG(s.total_amount) AS avg_transaction
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_LOCATIONS l 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_LOCATIONS l
         ON s.location_id = l.location_id
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     GROUP BY l.location_name, l.location_type
@@ -267,7 +267,7 @@ def get_location_sales(tournament_year: int) -> pd.DataFrame:
 def get_top_products(tournament_year: int, limit: int = 10) -> pd.DataFrame:
     """Get top selling products."""
     query = f"""
-    SELECT 
+    SELECT
         p.style_number,
         p.product_name,
         p.category,
@@ -277,9 +277,9 @@ def get_top_products(tournament_year: int, limit: int = 10) -> pd.DataFrame:
         SUM(s.gross_margin) AS margin,
         ROUND(SUM(s.gross_margin) / NULLIF(SUM(s.total_amount), 0) * 100, 1) AS margin_pct
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
         ON s.style_number = p.style_number
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     GROUP BY p.style_number, p.product_name, p.category, p.vendor
@@ -293,22 +293,22 @@ def get_inventory_status(tournament_year: int) -> pd.DataFrame:
     """Get current inventory status with alerts."""
     query = f"""
     WITH latest_inventory AS (
-        SELECT 
+        SELECT
             i.style_number,
             i.location_id,
             i.ending_qty,
             i.stock_status,
             i.inventory_value_retail,
             ROW_NUMBER() OVER (
-                PARTITION BY i.style_number, i.location_id 
+                PARTITION BY i.style_number, i.location_id
                 ORDER BY i.snapshot_date DESC
             ) AS rn
         FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_INVENTORY i
-        JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+        JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
             ON i.tournament_id = t.tournament_id
         WHERE t.tournament_year = {tournament_year}
     )
-    SELECT 
+    SELECT
         p.style_number,
         p.product_name,
         p.category,
@@ -317,17 +317,17 @@ def get_inventory_status(tournament_year: int) -> pd.DataFrame:
         li.stock_status,
         li.inventory_value_retail AS value
     FROM latest_inventory li
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
         ON li.style_number = p.style_number
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_LOCATIONS l 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_LOCATIONS l
         ON li.location_id = l.location_id
     WHERE li.rn = 1
-    ORDER BY 
-        CASE li.stock_status 
-            WHEN 'Critical' THEN 1 
-            WHEN 'Low' THEN 2 
-            WHEN 'Medium' THEN 3 
-            ELSE 4 
+    ORDER BY
+        CASE li.stock_status
+            WHEN 'Critical' THEN 1
+            WHEN 'Low' THEN 2
+            WHEN 'Medium' THEN 3
+            ELSE 4
         END,
         li.ending_qty
     """
@@ -337,7 +337,7 @@ def get_inventory_status(tournament_year: int) -> pd.DataFrame:
 def get_vendor_performance(tournament_year: int) -> pd.DataFrame:
     """Get vendor performance metrics."""
     query = f"""
-    SELECT 
+    SELECT
         p.vendor,
         COUNT(DISTINCT p.style_number) AS products,
         SUM(s.total_amount) AS revenue,
@@ -345,9 +345,9 @@ def get_vendor_performance(tournament_year: int) -> pd.DataFrame:
         SUM(s.gross_margin) AS margin,
         ROUND(SUM(s.gross_margin) / NULLIF(SUM(s.total_amount), 0) * 100, 1) AS margin_pct
     FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
         ON s.style_number = p.style_number
-    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
         ON s.tournament_id = t.tournament_id
     WHERE t.tournament_year = {tournament_year}
     GROUP BY p.vendor
@@ -388,32 +388,32 @@ def calculate_yoy_change(current: float, prior: float) -> tuple:
 # =============================================================================
 with st.sidebar:
     st.markdown("### 🏌️ Tournament Selection")
-    
+
     tournament_year = st.selectbox(
         "Select Tournament Year",
         options=[2025, 2024],
         index=0,
         help="Choose the tournament year to analyze"
     )
-    
+
     st.markdown("---")
-    
+
     st.markdown("### 📊 Dashboard Sections")
     show_summary = st.checkbox("Executive Summary", value=True)
     show_sales = st.checkbox("Sales Performance", value=True)
     show_inventory = st.checkbox("Inventory Status", value=True)
     show_products = st.checkbox("Product Analysis", value=True)
     show_locations = st.checkbox("Location Analysis", value=True)
-    
+
     st.markdown("---")
-    
+
     st.markdown("### ℹ️ About")
     st.markdown("""
-    **The Leaderboard**  
+    **The Leaderboard**
     Tournament Merchandise Analytics
-    
-    *Author:* SE Community  
-    *Expires:* 2025-12-31
+
+    *Author:* SE Community
+    *Expires:* 2026-01-31
     """)
 
 # =============================================================================
@@ -431,18 +431,18 @@ st.markdown("""
 # =============================================================================
 if show_summary:
     st.markdown('<div class="section-header">📈 Executive Summary</div>', unsafe_allow_html=True)
-    
+
     # Get data
     kpi_df = get_kpi_summary(tournament_year)
     yoy_df = get_yoy_comparison()
-    
+
     # Calculate YoY changes
     current_data = yoy_df[yoy_df['TOURNAMENT_YEAR'] == tournament_year].iloc[0] if len(yoy_df[yoy_df['TOURNAMENT_YEAR'] == tournament_year]) > 0 else None
     prior_data = yoy_df[yoy_df['TOURNAMENT_YEAR'] == tournament_year - 1].iloc[0] if len(yoy_df[yoy_df['TOURNAMENT_YEAR'] == tournament_year - 1]) > 0 else None
-    
+
     # KPI Cards
     col1, col2, col3, col4 = st.columns(4)
-    
+
     with col1:
         revenue = kpi_df['TOTAL_REVENUE'].iloc[0] if len(kpi_df) > 0 else 0
         if prior_data is not None and current_data is not None:
@@ -457,7 +457,7 @@ if show_summary:
             {delta_html}
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col2:
         units = kpi_df['TOTAL_UNITS'].iloc[0] if len(kpi_df) > 0 else 0
         if prior_data is not None and current_data is not None:
@@ -472,7 +472,7 @@ if show_summary:
             {delta_html}
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col3:
         margin = kpi_df['TOTAL_MARGIN'].iloc[0] if len(kpi_df) > 0 else 0
         margin_pct = (margin / revenue * 100) if revenue > 0 else 0
@@ -482,7 +482,7 @@ if show_summary:
             <p class="kpi-label">Gross Margin ({margin_pct:.1f}%)</p>
         </div>
         """, unsafe_allow_html=True)
-    
+
     with col4:
         transactions = kpi_df['TRANSACTION_COUNT'].iloc[0] if len(kpi_df) > 0 else 0
         avg_value = kpi_df['AVG_TRANSACTION_VALUE'].iloc[0] if len(kpi_df) > 0 else 0
@@ -498,9 +498,9 @@ if show_summary:
 # =============================================================================
 if show_sales:
     st.markdown('<div class="section-header">💰 Sales Performance</div>', unsafe_allow_html=True)
-    
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.markdown("##### Daily Sales Trend")
         daily_df = get_daily_sales(tournament_year)
@@ -511,7 +511,7 @@ if show_sales:
             st.bar_chart(chart_data.set_index('Day'))
         else:
             st.info("No daily sales data available")
-    
+
     with col2:
         st.markdown("##### Sales by Category")
         category_df = get_category_sales(tournament_year)
@@ -530,17 +530,17 @@ if show_sales:
 # =============================================================================
 if show_inventory:
     st.markdown('<div class="section-header">📦 Inventory Status</div>', unsafe_allow_html=True)
-    
+
     inventory_df = get_inventory_status(tournament_year)
-    
+
     if len(inventory_df) > 0:
         # Summary metrics
         critical_count = len(inventory_df[inventory_df['STOCK_STATUS'] == 'Critical'])
         low_count = len(inventory_df[inventory_df['STOCK_STATUS'] == 'Low'])
         adequate_count = len(inventory_df[inventory_df['STOCK_STATUS'] == 'Adequate'])
-        
+
         col1, col2, col3 = st.columns(3)
-        
+
         with col1:
             if critical_count > 0:
                 st.markdown(f"""
@@ -556,7 +556,7 @@ if show_inventory:
                     All items above minimum threshold
                 </div>
                 """, unsafe_allow_html=True)
-        
+
         with col2:
             if low_count > 0:
                 st.markdown(f"""
@@ -572,7 +572,7 @@ if show_inventory:
                     No low stock warnings
                 </div>
                 """, unsafe_allow_html=True)
-        
+
         with col3:
             st.markdown(f"""
             <div class="alert-success">
@@ -580,7 +580,7 @@ if show_inventory:
                 Items with healthy stock levels
             </div>
             """, unsafe_allow_html=True)
-        
+
         # Show critical/low items table
         st.markdown("##### Items Requiring Attention")
         attention_df = inventory_df[inventory_df['STOCK_STATUS'].isin(['Critical', 'Low'])].head(15)
@@ -598,9 +598,9 @@ if show_inventory:
 # =============================================================================
 if show_products:
     st.markdown('<div class="section-header">🏆 Product Analysis</div>', unsafe_allow_html=True)
-    
+
     col1, col2 = st.columns(2)
-    
+
     with col1:
         st.markdown("##### Top 10 Products by Revenue")
         top_products_df = get_top_products(tournament_year, 10)
@@ -611,7 +611,7 @@ if show_products:
             st.dataframe(display_df, use_container_width=True)
         else:
             st.info("No product data available")
-    
+
     with col2:
         st.markdown("##### Vendor Performance")
         vendor_df = get_vendor_performance(tournament_year)
@@ -629,18 +629,18 @@ if show_products:
 # =============================================================================
 if show_locations:
     st.markdown('<div class="section-header">📍 Location Analysis</div>', unsafe_allow_html=True)
-    
+
     location_df = get_location_sales(tournament_year)
-    
+
     if len(location_df) > 0:
         col1, col2 = st.columns([2, 1])
-        
+
         with col1:
             st.markdown("##### Revenue by Location")
             chart_data = location_df[['LOCATION_NAME', 'REVENUE']].copy()
             chart_data.columns = ['Location', 'Revenue']
             st.bar_chart(chart_data.set_index('Location'))
-        
+
         with col2:
             st.markdown("##### Location Metrics")
             display_df = location_df[['LOCATION_NAME', 'REVENUE', 'TRANSACTIONS', 'AVG_TRANSACTION']].copy()
@@ -661,4 +661,3 @@ st.markdown("""
     <p>⛳ The Championship Invitational • Tournament Merchandise Intelligence</p>
 </div>
 """, unsafe_allow_html=True)
-
