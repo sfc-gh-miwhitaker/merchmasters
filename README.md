@@ -1,29 +1,18 @@
 
-> ## ⚠️ DEPRECATED - THIS DEMO HAS EXPIRED
-> 
-> **Expiration Date:** 2025-12-31
-> 
-> This demonstration project has passed its expiration date. The code may contain 
-> outdated Snowflake syntax or deprecated features. Please contact the SE team 
-> for an updated version.
-> 
-> ---
-
-
 ![Reference Implementation](https://img.shields.io/badge/Reference-Implementation-blue)
 ![Ready to Run](https://img.shields.io/badge/Ready%20to%20Run-Yes-green)
-![Expires](https://img.shields.io/badge/Expires-2026--01--31-orange)
+![Expires](https://img.shields.io/badge/Expires-2026--04--10-orange)
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=flat&logo=snowflake&logoColor=white)
 
 # MerchMasters: Tournament Merchandise Intelligence
 
-> **DEMONSTRATION PROJECT - EXPIRES: 2026-01-31**  
-> This demo uses Snowflake features current as of December 2025.  
+> **DEMONSTRATION PROJECT - EXPIRES: 2026-04-10**
+> This demo uses Snowflake features current as of February 2026.
 > After expiration, this repository will be archived and made private.
 
-**Author:** SE Community  
-**Purpose:** Reference implementation for tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)  
-**Created:** 2025-12-01 | **Expires:** 2026-01-31 (30 days) | **Status:** ACTIVE
+**Author:** SE Community
+**Purpose:** Reference implementation for tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)
+**Created:** 2025-12-01 | **Expires:** 2026-04-10 | **Status:** ACTIVE
 
 ---
 
@@ -199,7 +188,7 @@ To remove all demo objects, copy and run the contents of `sql/99_cleanup/teardow
 
 ```sql
 -- Remove agent from Snowflake Intelligence visibility
-ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
     DROP AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
 
 -- Remove demo-specific objects (preserves SNOWFLAKE_EXAMPLE database)
@@ -250,5 +239,4 @@ This is a reference implementation for demonstration purposes. For questions or 
 
 ---
 
-**Built with Snowflake Intelligence** | **Author: SE Community** | **Expires: 2026-01-31**
-
+**Built with Snowflake Intelligence** | **Author: SE Community** | **Expires: 2026-04-10**

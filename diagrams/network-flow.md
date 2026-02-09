@@ -2,7 +2,7 @@
 
 **Author:** SE Community
 **Last Updated:** 2025-12-02
-**Expires:** 2026-01-31 (30 days)
+**Expires:** 2026-04-10 (30 days)
 **Status:** Reference Implementation
 
 ![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)

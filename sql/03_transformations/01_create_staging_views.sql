@@ -1,23 +1,23 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Create Staging Views
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Create staging views that clean and validate raw data
- * 
+ *
  * OBJECTS CREATED:
  *   - SFE_STG_PRODUCTS (cleaned product catalog)
  *   - SFE_STG_LOCATIONS (cleaned locations)
  *   - SFE_STG_TOURNAMENTS (cleaned tournaments)
  *   - SFE_STG_SALES (cleaned sales with derived fields)
  *   - SFE_STG_INVENTORY (cleaned inventory)
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -32,9 +32,9 @@ USE SCHEMA SFE_MERCH_STAGING;
 -- STAGING: PRODUCTS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_PRODUCTS
-COMMENT = 'DEMO: MerchMasters - Staged product catalog | Author: SE Community | Expires: 2026-01-31'
+COMMENT = 'DEMO: MerchMasters - Staged product catalog | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     TRIM(style_number) AS style_number,
     TRIM(product_name) AS product_name,
     UPPER(TRIM(category)) AS category,
@@ -54,9 +54,9 @@ WHERE style_number IS NOT NULL;
 -- STAGING: LOCATIONS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_LOCATIONS
-COMMENT = 'DEMO: MerchMasters - Staged retail locations | Author: SE Community | Expires: 2026-01-31'
+COMMENT = 'DEMO: MerchMasters - Staged retail locations | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     location_id,
     TRIM(location_name) AS location_name,
     UPPER(TRIM(location_type)) AS location_type,
@@ -70,9 +70,9 @@ WHERE location_id IS NOT NULL;
 -- STAGING: TOURNAMENTS
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_TOURNAMENTS
-COMMENT = 'DEMO: MerchMasters - Staged tournament calendar | Author: SE Community | Expires: 2026-01-31'
+COMMENT = 'DEMO: MerchMasters - Staged tournament calendar | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     tournament_id,
     TRIM(tournament_name) AS tournament_name,
     tournament_year,
@@ -88,9 +88,9 @@ WHERE tournament_id IS NOT NULL
 -- STAGING: SALES
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_SALES
-COMMENT = 'DEMO: MerchMasters - Staged sales transactions | Author: SE Community | Expires: 2026-01-31'
+COMMENT = 'DEMO: MerchMasters - Staged sales transactions | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     transaction_id,
     transaction_date,
     transaction_time,
@@ -114,9 +114,9 @@ WHERE transaction_id IS NOT NULL
 -- STAGING: INVENTORY
 -- ============================================================================
 CREATE OR REPLACE VIEW SFE_STG_INVENTORY
-COMMENT = 'DEMO: MerchMasters - Staged inventory snapshots | Author: SE Community | Expires: 2026-01-31'
+COMMENT = 'DEMO: MerchMasters - Staged inventory snapshots | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     snapshot_date,
     location_id,
     TRIM(style_number) AS style_number,
@@ -129,4 +129,3 @@ SELECT
     created_at
 FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_RAW.SFE_RAW_INVENTORY
 WHERE snapshot_date IS NOT NULL;
-

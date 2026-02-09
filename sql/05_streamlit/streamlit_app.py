@@ -5,7 +5,7 @@ A Streamlit in Snowflake dashboard for golf shop merchandise analytics.
 See who's winning the merch game.
 
 Author: SE Community
-Expires: 2026-01-31
+Expires: 2026-04-10
 """
 
 import streamlit as st
@@ -292,44 +292,34 @@ def get_top_products(tournament_year: int, limit: int = 10) -> pd.DataFrame:
 def get_inventory_status(tournament_year: int) -> pd.DataFrame:
     """Get current inventory status with alerts."""
     query = f"""
-    WITH latest_inventory AS (
-        SELECT
-            i.style_number,
-            i.location_id,
-            i.ending_qty,
-            i.stock_status,
-            i.inventory_value_retail,
-            ROW_NUMBER() OVER (
-                PARTITION BY i.style_number, i.location_id
-                ORDER BY i.snapshot_date DESC
-            ) AS rn
-        FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_INVENTORY i
-        JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
-            ON i.tournament_id = t.tournament_id
-        WHERE t.tournament_year = {tournament_year}
-    )
     SELECT
         p.style_number,
         p.product_name,
         p.category,
         l.location_name,
-        li.ending_qty AS on_hand,
-        li.stock_status,
-        li.inventory_value_retail AS value
-    FROM latest_inventory li
+        i.ending_qty AS on_hand,
+        i.stock_status,
+        i.inventory_value_retail AS value
+    FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_INVENTORY i
+    JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
+        ON i.tournament_id = t.tournament_id
     JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
-        ON li.style_number = p.style_number
+        ON i.style_number = p.style_number
     JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_LOCATIONS l
-        ON li.location_id = l.location_id
-    WHERE li.rn = 1
+        ON i.location_id = l.location_id
+    WHERE t.tournament_year = {tournament_year}
+    QUALIFY ROW_NUMBER() OVER (
+        PARTITION BY i.style_number, i.location_id
+        ORDER BY i.snapshot_date DESC
+    ) = 1
     ORDER BY
-        CASE li.stock_status
+        CASE i.stock_status
             WHEN 'Critical' THEN 1
             WHEN 'Low' THEN 2
             WHEN 'Medium' THEN 3
             ELSE 4
         END,
-        li.ending_qty
+        i.ending_qty
     """
     return session.sql(query).to_pandas()
 
@@ -413,7 +403,7 @@ with st.sidebar:
     Tournament Merchandise Analytics
 
     *Author:* SE Community
-    *Expires:* 2026-01-31
+    *Expires:* 2026-04-10
     """)
 
 # =============================================================================

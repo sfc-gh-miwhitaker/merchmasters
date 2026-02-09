@@ -1,19 +1,19 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Create Database
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Ensure SNOWFLAKE_EXAMPLE database exists for demo objects
- * 
+ *
  * OBJECTS CREATED:
  *   - SNOWFLAKE_EXAMPLE database (if not exists)
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -27,4 +27,3 @@ CREATE DATABASE IF NOT EXISTS SNOWFLAKE_EXAMPLE
     COMMENT = 'DEMO: Repository for example/demo projects - NOT FOR PRODUCTION';
 
 -- Database ready for use
-

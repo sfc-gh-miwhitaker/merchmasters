@@ -3,7 +3,7 @@
 # =============================================================================
 # Purpose: Automatically archive and make repository private after expiration
 # Author: SE Community
-# Expires: 2026-01-31
+# Expires: 2026-04-10
 #
 # This workflow runs daily and checks if the demo has expired. After expiration:
 # 1. Adds deprecation notice to README
@@ -21,7 +21,7 @@ on:
     # Allow manual trigger for testing
 
 env:
-  EXPIRATION_DATE: '2026-01-31'
+  EXPIRATION_DATE: '2026-04-10'
 
 jobs:
   check-expiration:

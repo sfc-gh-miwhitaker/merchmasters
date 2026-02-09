@@ -1,13 +1,13 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Teardown All Demo Objects
- * 
+ *
  * NOT FOR PRODUCTION USE - CLEANUP SCRIPT
- * 
+ *
  * PURPOSE:
  *   Remove all MerchMasters demo objects from the account.
  *   Preserves shared infrastructure (SNOWFLAKE_EXAMPLE database, shared schemas).
- * 
+ *
  * OBJECTS REMOVED:
  *   - Agent: SFE_MERCH_INTELLIGENCE_AGENT (from project schema)
  *   - Agent removed from Snowflake Intelligence object
@@ -17,14 +17,14 @@
  *   - Warehouse: SFE_MERCHMASTERS_WH
  *   - Git Repository: sfe_merchmasters_repo
  *   - Git Schema: MERCHMASTERS_GIT_REPOS
- * 
+ *
  * OBJECTS PRESERVED:
  *   - SNOWFLAKE_EXAMPLE database (shared by other demos)
  *   - SEMANTIC_MODELS schema (may contain other views)
  *   - Snowflake Intelligence object (account-level, shared)
  *   - SFE_* API integrations (may be shared)
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -39,7 +39,7 @@ USE ROLE SYSADMIN;
 -- ============================================================================
 -- This removes the agent from the UI visibility list (must be done before dropping agent)
 -- Note: This will error if the Intelligence object doesn't exist - that's OK during cleanup
-ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
     DROP AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;
 
 -- ============================================================================
@@ -96,25 +96,25 @@ DROP WAREHOUSE IF EXISTS SFE_MERCHMASTERS_WH;
 
 /******************************************************************************
  * CLEANUP COMPLETE
- * 
+ *
  * To verify cleanup, run these queries in a separate worksheet:
- * 
+ *
  *   -- Should return no schemas
  *   SHOW SCHEMAS IN DATABASE SNOWFLAKE_EXAMPLE LIKE 'SFE_MERCH%';
  *   SHOW SCHEMAS IN DATABASE SNOWFLAKE_EXAMPLE LIKE 'MERCHMASTERS%';
- *   
+ *
  *   -- Should return no warehouse
  *   SHOW WAREHOUSES LIKE 'SFE_MERCHMASTERS%';
- *   
+ *
  *   -- Should return no semantic view
  *   SHOW VIEWS IN SCHEMA SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS LIKE 'SFE_SV_MERCH%';
- *   
+ *
  *   -- Should return no streamlit apps
  *   SHOW STREAMLITS LIKE 'SFE_MERCH%';
  *
  *   -- Should return no agent (in project schema)
  *   SHOW AGENTS IN SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
- * 
+ *
  * To completely remove ALL demo infrastructure (use with caution):
  *   DROP API INTEGRATION IF EXISTS SFE_MERCHMASTERS_GIT_API_INTEGRATION;
  ******************************************************************************/

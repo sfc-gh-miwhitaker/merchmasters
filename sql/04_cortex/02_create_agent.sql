@@ -1,31 +1,31 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Create Cortex Agent
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Create Snowflake Intelligence agent for natural language merchandise
  *   analytics using Cortex Analyst with the SFE_SV_MERCH_INTELLIGENCE semantic view.
- * 
+ *
  * OBJECTS CREATED:
  *   - SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT (Agent)
  *   - Added to SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT for UI visibility
- * 
+ *
  * NOTE: Agent is created in project-specific schema and added to Snowflake
  *       Intelligence object for visibility in the Snowflake Intelligence UI.
  *       This follows the Dec 2025 recommended pattern.
- * 
+ *
  * SAMPLE QUESTIONS:
  *   1. "What are the top 10 selling products this year?"
  *   2. "How are sales by category comparing to last year?"
  *   3. "How are sales varying by location?"
  *   4. "Which vendors are performing best?"
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -39,7 +39,7 @@ USE DATABASE SNOWFLAKE_EXAMPLE;
 -- CREATE MERCHMASTERS SCHEMA FOR AGENT (if not exists)
 -- ============================================================================
 CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS
-    COMMENT = 'DEMO: MerchMasters - Project schema for agents and procedures | Author: SE Community | Expires: 2026-01-31';
+    COMMENT = 'DEMO: MerchMasters - Project schema for agents and procedures | Author: SE Community | Expires: 2026-04-10';
 
 USE SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
 
@@ -47,36 +47,44 @@ USE SCHEMA SNOWFLAKE_EXAMPLE.MERCHMASTERS;
 -- CREATE CORTEX AGENT
 -- ============================================================================
 CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
-  COMMENT = 'DEMO: MerchMasters - Tournament merchandise analytics agent | Author: SE Community | Expires: 2026-01-31'
+  COMMENT = 'DEMO: MerchMasters - Tournament merchandise analytics agent | Author: SE Community | Expires: 2026-04-10'
   PROFILE = '{"display_name": "Merchandise Intelligence", "color": "green"}'
   FROM SPECIFICATION
   $$
+  models:
+    orchestration: auto
+
+  orchestration:
+    budget:
+      seconds: 30
+      tokens: 16000
+
   instructions:
     system: |
-      You are a merchandise analytics agent for a premier golf tournament. 
-      You help merchandise managers understand sales performance, inventory status, 
+      You are a merchandise analytics agent for a premier golf tournament.
+      You help merchandise managers understand sales performance, inventory status,
       and make data-driven decisions during tournament week.
-      
+
       SCOPE:
       - Answer questions about merchandise sales, revenue, and margins
       - Provide inventory status and stock level information
       - Compare performance between current year (2025) and prior year (2024)
       - Analyze trends by product category, location, vendor, and time period
-      
+
       BOUNDARIES:
       - Only answer questions about merchandise data available in the semantic model
       - Do not make inventory reorder recommendations
       - Do not predict future sales beyond stating current trends
-      
+
       DATA AVAILABILITY:
       - Sales transactions for 2024 and 2025 tournaments
       - Daily inventory snapshots during tournament week
       - ~200 products across 6 categories at 4 retail locations
 
     orchestration: |
-      Use the MerchAnalytics tool to answer questions about merchandise sales, 
+      Use the MerchAnalytics tool to answer questions about merchandise sales,
       inventory, revenue, margins, and performance comparisons.
-      
+
       QUERY GUIDANCE:
       - Year-over-year: Filter by tournament_year (2024=prior, 2025=current)
       - Categories: Shirts, Hats, Drinkware, Accessories, Outerwear
@@ -89,7 +97,7 @@ CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
       - Format currency: $1,234.56
       - Format percentages: 12.3%
       - Include data context (year, date range) in responses
-      
+
       After answering, suggest 1-2 related follow-up questions.
 
     sample_questions:
@@ -106,16 +114,24 @@ CREATE OR REPLACE AGENT SFE_MERCH_INTELLIGENCE_AGENT
           Query tournament merchandise data including sales transactions, inventory levels,
           products, locations, and tournament information. Supports year-over-year comparisons
           between 2024 (prior year) and 2025 (current year) tournaments.
-          
+
           AVAILABLE DATA:
           - Sales: transaction_id, date, location, product, quantity, revenue, margin
           - Inventory: snapshot_date, location, product, beginning/ending quantities, stock_status
           - Products: style_number, name, category, subcategory, vendor, pricing
           - Locations: Pro Shop, Tournament Tent A/B, Clubhouse Store
           - Tournaments: 2024 (Apr 8-14) and 2025 (Apr 7-13)
-          
-          KEY METRICS: total_revenue, total_units_sold, total_gross_margin, 
+
+          KEY METRICS: total_revenue, total_units_sold, total_gross_margin,
           transaction_count, avg_transaction_value, total_ending_inventory
+    - tool_spec:
+        type: data_to_chart
+        name: DataToChart
+        description: |
+          Generate visualizations and charts from query results.
+          Use this tool to create bar charts, line charts, pie charts, and other
+          visualizations when the user asks to see data visually or when a chart
+          would enhance understanding of trends, comparisons, or distributions.
 
   tool_resources:
     MerchAnalytics:
@@ -135,5 +151,5 @@ GRANT USAGE ON AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT
 -- This makes the agent visible in the Snowflake Intelligence UI
 -- The Snowflake Intelligence object is created in deploy_all.sql (requires ACCOUNTADMIN)
 
-ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT 
+ALTER SNOWFLAKE INTELLIGENCE SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
     ADD AGENT SNOWFLAKE_EXAMPLE.MERCHMASTERS.SFE_MERCH_INTELLIGENCE_AGENT;

@@ -1,23 +1,23 @@
 /******************************************************************************
  * MERCHMASTERS: Tournament Merchandise Intelligence Demo
- * 
+ *
  * DEPLOYMENT SCRIPT - Copy this entire file into Snowsight and click "Run All"
- * 
+ *
  * PROJECT_NAME: MerchMasters
  * AUTHOR: SE Community
  * CREATED: 2025-12-01
- * EXPIRES: 2026-01-31
+ * EXPIRES: 2026-04-10
  * PURPOSE: Tournament merchandise analytics using Snowflake Intelligence (Cortex Analyst)
- * LAST_UPDATED: 2025-12-15
+ * LAST_UPDATED: 2026-02-09
  * GITHUB_REPO: https://github.com/sfc-gh-miwhitaker/merchmasters
- * 
+ *
  * INSTRUCTIONS:
  *   1. Open Snowsight (https://app.snowflake.com)
  *   2. Create a new SQL Worksheet
  *   3. Copy this ENTIRE script and paste it
  *   4. Click "Run All" (or Ctrl+Shift+Enter / Cmd+Shift+Enter)
  *   5. Wait ~10 minutes for completion
- * 
+ *
  * OBJECTS CREATED:
  *   - Snowflake Intelligence Object: SNOWFLAKE_INTELLIGENCE_OBJECT_DEFAULT
  *   - API Integration: SFE_MERCHMASTERS_GIT_API_INTEGRATION
@@ -27,11 +27,11 @@
  *   - Semantic View: SFE_SV_MERCH_INTELLIGENCE
  *   - Cortex Agent: SFE_MERCH_INTELLIGENCE_AGENT (in MERCHMASTERS schema)
  *   - Streamlit Dashboard: SFE_THE_LEADERBOARD
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -45,12 +45,12 @@ USE WAREHOUSE COMPUTE_WH;
 -- ============================================================================
 -- SECTION 0: EXPIRATION CHECK
 -- ============================================================================
--- This demo expires on 2026-01-31. After this date, deployment will be blocked.
+-- This demo expires on 2026-04-10. After this date, deployment will be blocked.
 
 EXECUTE IMMEDIATE
 $$
 DECLARE
-    v_expiration_date DATE := '2026-01-31';
+    v_expiration_date DATE := '2026-04-10';
     demo_expired EXCEPTION (-20001, 'DEMO EXPIRED: This demonstration project expired. The code may contain outdated Snowflake syntax. Please contact the SE team for an updated version.');
 BEGIN
     IF (CURRENT_DATE() > v_expiration_date) THEN
@@ -85,7 +85,7 @@ CREATE OR REPLACE API INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION
     API_PROVIDER = git_https_api
     API_ALLOWED_PREFIXES = ('https://github.com/sfc-gh-miwhitaker/')
     ENABLED = TRUE
-    COMMENT = 'DEMO: MerchMasters - Git integration for public repo access | Author: SE Community | Expires: 2026-01-31';
+    COMMENT = 'DEMO: MerchMasters - Git integration for public repo access | Author: SE Community | Expires: 2026-04-10';
 
 -- Grant usage to SYSADMIN so it can create Git repos using this integration
 GRANT USAGE ON INTEGRATION SFE_MERCHMASTERS_GIT_API_INTEGRATION TO ROLE SYSADMIN;
@@ -101,7 +101,7 @@ CREATE DATABASE IF NOT EXISTS SNOWFLAKE_EXAMPLE
     COMMENT = 'DEMO: Repository for example/demo projects - NOT FOR PRODUCTION';
 
 CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
-    COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2026-01-31';
+    COMMENT = 'DEMO: MerchMasters - Git repository references | Author: SE Community | Expires: 2026-04-10';
 
 -- ============================================================================
 -- SECTION 4: CREATE GIT REPOSITORY REFERENCE
@@ -110,7 +110,7 @@ CREATE SCHEMA IF NOT EXISTS SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS
 CREATE OR REPLACE GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo
     API_INTEGRATION = SFE_MERCHMASTERS_GIT_API_INTEGRATION
     ORIGIN = 'https://github.com/sfc-gh-miwhitaker/merchmasters'
-    COMMENT = 'DEMO: MerchMasters - Public repo for tournament merchandise intelligence | Author: SE Community | Expires: 2026-01-31';
+    COMMENT = 'DEMO: MerchMasters - Public repo for tournament merchandise intelligence | Author: SE Community | Expires: 2026-04-10';
 
 -- Fetch latest from repository
 ALTER GIT REPOSITORY SNOWFLAKE_EXAMPLE.MERCHMASTERS_GIT_REPOS.sfe_merchmasters_repo FETCH;
@@ -124,8 +124,8 @@ CREATE OR REPLACE WAREHOUSE SFE_MERCHMASTERS_WH
     WAREHOUSE_SIZE = 'XSMALL'
     AUTO_SUSPEND = 60
     AUTO_RESUME = TRUE
-    INITIALLY_SUSPENDED = FALSE
-    COMMENT = 'DEMO: MerchMasters - Demo compute warehouse | Author: SE Community | Expires: 2026-01-31';
+    INITIALLY_SUSPENDED = TRUE
+    COMMENT = 'DEMO: MerchMasters - Demo compute warehouse | Author: SE Community | Expires: 2026-04-10';
 
 -- Set warehouse context for subsequent operations
 USE WAREHOUSE SFE_MERCHMASTERS_WH;
@@ -192,17 +192,17 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
 
 /******************************************************************************
  * DEPLOYMENT COMPLETE
- * 
+ *
  * Next Steps - Option 1: Snowflake Intelligence (Cortex Analyst)
  *   1. Navigate to Snowflake Intelligence in Snowsight
  *   2. Select SFE_MERCH_INTELLIGENCE_AGENT
  *   3. Ask natural language questions about merchandise performance!
- * 
+ *
  * Next Steps - Option 2: Streamlit Dashboard
  *   1. Navigate to Projects → Streamlit in Snowsight
  *   2. Select SFE_THE_LEADERBOARD
  *   3. Explore the interactive merchandise analytics dashboard!
- * 
+ *
  * To verify deployment, run these queries in a separate worksheet:
  *   SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES;
  *   SELECT COUNT(*) FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS;
@@ -211,27 +211,27 @@ GRANT USAGE ON WAREHOUSE SFE_MERCHMASTERS_WH TO ROLE PUBLIC;
 
 /******************************************************************************
  * TROUBLESHOOTING
- * 
+ *
  * Error: "API Integration already exists"
  *   → DROP API INTEGRATION IF EXISTS SFE_MERCHMASTERS_GIT_API_INTEGRATION;
  *   → Re-run this script
- * 
+ *
  * Error: "Insufficient privileges"
  *   → Ensure you're using ACCOUNTADMIN role
  *   → USE ROLE ACCOUNTADMIN;
- * 
+ *
  * Error: "Git repository fetch failed"
  *   → Check internet connectivity
  *   → Verify GitHub repository is accessible
  *   → Wait a few minutes and retry
- * 
+ *
  * Error: "Demo has expired"
  *   → This demo has passed its expiration date
  *   → Contact SE team for updated version
- * 
+ *
  * Error: "Snowflake Intelligence object already exists"
  *   → This is OK - the object is shared across all demos
  *   → The CREATE IF NOT EXISTS will succeed without changes
- * 
+ *
  * For cleanup instructions, see: sql/99_cleanup/teardown_all.sql
  ******************************************************************************/

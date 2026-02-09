@@ -1,12 +1,12 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Create Analytics Tables (Star Schema)
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Create dimension and fact tables for Cortex Analyst
- * 
+ *
  * OBJECTS CREATED:
  *   - SFE_DIM_PRODUCTS (product dimension)
  *   - SFE_DIM_LOCATIONS (location dimension)
@@ -14,11 +14,11 @@
  *   - SFE_DIM_DATES (date dimension with tournament context)
  *   - SFE_FCT_SALES (sales fact)
  *   - SFE_FCT_INVENTORY (inventory fact)
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -32,10 +32,10 @@ USE SCHEMA SFE_MERCH_ANALYTICS;
 -- ============================================================================
 -- DIMENSION: PRODUCTS
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_DIM_PRODUCTS
-COMMENT = 'DEMO: MerchMasters - Product dimension | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_DIM_PRODUCTS
+COMMENT = 'DEMO: MerchMasters - Product dimension | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     style_number,
     product_name,
     category,
@@ -54,10 +54,10 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_PRODUCTS;
 -- ============================================================================
 -- DIMENSION: LOCATIONS
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_DIM_LOCATIONS
-COMMENT = 'DEMO: MerchMasters - Location dimension | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_DIM_LOCATIONS
+COMMENT = 'DEMO: MerchMasters - Location dimension | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     location_id,
     location_name,
     location_type,
@@ -70,17 +70,17 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_LOCATIONS;
 -- ============================================================================
 -- DIMENSION: TOURNAMENTS
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_DIM_TOURNAMENTS
-COMMENT = 'DEMO: MerchMasters - Tournament dimension | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_DIM_TOURNAMENTS
+COMMENT = 'DEMO: MerchMasters - Tournament dimension | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     tournament_id,
     tournament_name,
     tournament_year,
     start_date,
     end_date,
     tournament_days,
-    CASE tournament_year 
+    CASE tournament_year
         WHEN 2024 THEN 'Prior Year'
         WHEN 2025 THEN 'Current Year'
         ELSE 'Other'
@@ -92,12 +92,12 @@ FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_TOURNAMENTS;
 -- ============================================================================
 -- DIMENSION: DATES
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_DIM_DATES
-COMMENT = 'DEMO: MerchMasters - Date dimension with tournament context | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_DIM_DATES
+COMMENT = 'DEMO: MerchMasters - Date dimension with tournament context | Author: SE Community | Expires: 2026-04-10'
 AS
 WITH RECURSIVE date_spine AS (
     -- Anchor: start with first day of each tournament
-    SELECT 
+    SELECT
         tournament_id,
         tournament_name,
         tournament_year,
@@ -105,11 +105,11 @@ WITH RECURSIVE date_spine AS (
         end_date,
         start_date AS full_date
     FROM SFE_DIM_TOURNAMENTS
-    
+
     UNION ALL
-    
+
     -- Recursive: add one day until end_date
-    SELECT 
+    SELECT
         ds.tournament_id,
         ds.tournament_name,
         ds.tournament_year,
@@ -120,7 +120,7 @@ WITH RECURSIVE date_spine AS (
     WHERE ds.full_date < ds.end_date
 ),
 tournament_dates AS (
-    SELECT 
+    SELECT
         tournament_id,
         tournament_name,
         tournament_year,
@@ -129,7 +129,7 @@ tournament_dates AS (
         ROW_NUMBER() OVER (PARTITION BY tournament_id ORDER BY full_date) AS tournament_day_num
     FROM date_spine
 )
-SELECT 
+SELECT
     TO_NUMBER(TO_CHAR(td.full_date, 'YYYYMMDD')) AS date_key,
     td.full_date,
     YEAR(td.full_date) AS year_num,
@@ -141,11 +141,11 @@ SELECT
     td.tournament_name,
     td.tournament_year,
     td.tournament_day_num,
-    CASE 
+    CASE
         WHEN td.tournament_day_num <= 2 THEN FALSE  -- Practice rounds
         ELSE TRUE  -- Competition days
     END AS is_competition_day,
-    CASE 
+    CASE
         WHEN td.tournament_day_num = 1 THEN 'Practice Round 1'
         WHEN td.tournament_day_num = 2 THEN 'Practice Round 2'
         WHEN td.tournament_day_num = 3 THEN 'Round 1'
@@ -161,10 +161,10 @@ FROM tournament_dates td;
 -- ============================================================================
 -- FACT: SALES
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_FCT_SALES
-COMMENT = 'DEMO: MerchMasters - Sales fact table | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_FCT_SALES
+COMMENT = 'DEMO: MerchMasters - Sales fact table | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     s.transaction_id,
     TO_NUMBER(TO_CHAR(s.transaction_date, 'YYYYMMDD')) AS date_key,
     s.transaction_date,
@@ -189,10 +189,10 @@ LEFT JOIN SFE_DIM_PRODUCTS p ON s.style_number = p.style_number;
 -- ============================================================================
 -- FACT: INVENTORY
 -- ============================================================================
-CREATE OR REPLACE TABLE SFE_FCT_INVENTORY
-COMMENT = 'DEMO: MerchMasters - Inventory fact table | Author: SE Community | Expires: 2026-01-31'
+CREATE OR REPLACE TRANSIENT TABLE SFE_FCT_INVENTORY
+COMMENT = 'DEMO: MerchMasters - Inventory fact table | Author: SE Community | Expires: 2026-04-10'
 AS
-SELECT 
+SELECT
     ROW_NUMBER() OVER (ORDER BY i.snapshot_date, i.location_id, i.style_number) AS inventory_id,
     TO_NUMBER(TO_CHAR(i.snapshot_date, 'YYYYMMDD')) AS date_key,
     i.snapshot_date,
@@ -206,7 +206,7 @@ SELECT
     p.unit_cost * i.ending_qty AS inventory_value_cost,
     p.retail_price * i.ending_qty AS inventory_value_retail,
     i.tournament_id,
-    CASE 
+    CASE
         WHEN i.ending_qty <= 10 THEN 'Critical'
         WHEN i.ending_qty <= 25 THEN 'Low'
         WHEN i.ending_qty <= 50 THEN 'Medium'
@@ -215,4 +215,3 @@ SELECT
     CURRENT_TIMESTAMP() AS loaded_at
 FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_STAGING.SFE_STG_INVENTORY i
 LEFT JOIN SFE_DIM_PRODUCTS p ON i.style_number = p.style_number;
-

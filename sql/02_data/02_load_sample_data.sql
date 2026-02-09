@@ -1,23 +1,23 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Load Sample Data
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Generate realistic synthetic merchandise data for demo
- * 
+ *
  * DATA VOLUMES:
  *   - ~200 products (styles)
  *   - 4 retail locations
  *   - 2 tournaments (prior year + current year)
  *   - ~100,000 sales transactions
  *   - ~5,000 inventory snapshots
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -53,7 +53,7 @@ VALUES
 
 -- Golf Shirts (Polos)
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'GS-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 5)
         WHEN 0 THEN 'Classic Polo'
@@ -90,7 +90,7 @@ FROM TABLE(GENERATOR(ROWCOUNT => 40));
 
 -- T-Shirts
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'TS-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 4)
         WHEN 0 THEN 'Championship Logo Tee'
@@ -120,7 +120,7 @@ FROM TABLE(GENERATOR(ROWCOUNT => 35));
 
 -- Hats
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'HAT-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 5)
         WHEN 0 THEN 'Championship Cap'
@@ -150,7 +150,7 @@ FROM TABLE(GENERATOR(ROWCOUNT => 30));
 
 -- Drinkware
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'DW-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 5)
         WHEN 0 THEN 'Insulated Tumbler'
@@ -175,7 +175,7 @@ FROM TABLE(GENERATOR(ROWCOUNT => 25));
 
 -- Accessories
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'ACC-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 8)
         WHEN 0 THEN 'Golf Towel'
@@ -212,7 +212,7 @@ FROM TABLE(GENERATOR(ROWCOUNT => 40));
 
 -- Outerwear
 INSERT INTO SFE_RAW_PRODUCTS (style_number, product_name, category, subcategory, collection, vendor, unit_cost, retail_price, is_dated_year)
-SELECT 
+SELECT
     'OW-' || LPAD(SEQ4()::VARCHAR, 3, '0') AS style_number,
     CASE MOD(SEQ4(), 4)
         WHEN 0 THEN 'Quarter Zip Pullover'
@@ -248,18 +248,18 @@ FROM TABLE(GENERATOR(ROWCOUNT => 30));
 CREATE OR REPLACE TEMPORARY TABLE tmp_tournament_dates AS
 WITH RECURSIVE date_spine AS (
     -- Anchor: start with the first day of each tournament
-    SELECT 
+    SELECT
         tournament_id,
         tournament_name,
         tournament_year,
         start_date AS sale_date,
         end_date
     FROM SFE_RAW_TOURNAMENTS
-    
+
     UNION ALL
-    
+
     -- Recursive: add one day until we reach end_date
-    SELECT 
+    SELECT
         ds.tournament_id,
         ds.tournament_name,
         ds.tournament_year,
@@ -268,36 +268,36 @@ WITH RECURSIVE date_spine AS (
     FROM date_spine ds
     WHERE ds.sale_date < ds.end_date
 )
-SELECT 
+SELECT
     tournament_id,
     tournament_name,
     tournament_year,
     sale_date,
-    CASE 
+    CASE
         WHEN DAYOFWEEK(sale_date) IN (0, 6) THEN 1.5  -- Weekend boost
         WHEN sale_date = end_date THEN 2.0            -- Final day surge
-        ELSE 1.0 
+        ELSE 1.0
     END AS day_multiplier
 FROM date_spine;
 
 -- Generate sales for 2024 tournament (prior year)
 INSERT INTO SFE_RAW_SALES (
-    transaction_id, transaction_date, transaction_time, location_id, 
-    style_number, sku, quantity_sold, unit_price, total_amount, 
+    transaction_id, transaction_date, transaction_time, location_id,
+    style_number, sku, quantity_sold, unit_price, total_amount,
     payment_method, tournament_id
 )
-SELECT 
+SELECT
     '2024-' || LPAD(ROW_NUMBER() OVER (ORDER BY RANDOM())::VARCHAR, 7, '0') AS transaction_id,
     td.sale_date AS transaction_date,
     TIMEADD('minute', UNIFORM(480, 1140, RANDOM()), '00:00:00'::TIME) AS transaction_time,
     UNIFORM(1, 4, RANDOM()) AS location_id,
     p.style_number,
-    p.style_number || '-' || 
+    p.style_number || '-' ||
         CASE MOD(UNIFORM(1, 10, RANDOM()), 5) WHEN 0 THEN 'S' WHEN 1 THEN 'M' WHEN 2 THEN 'L' WHEN 3 THEN 'XL' ELSE 'XXL' END AS sku,
     GREATEST(1, ROUND(UNIFORM(1, 4, RANDOM()) * td.day_multiplier)) AS quantity_sold,
     p.retail_price AS unit_price,
     GREATEST(1, ROUND(UNIFORM(1, 4, RANDOM()) * td.day_multiplier)) * p.retail_price AS total_amount,
-    CASE UNIFORM(1, 10, RANDOM()) 
+    CASE UNIFORM(1, 10, RANDOM())
         WHEN 1 THEN 'Cash'
         WHEN 2 THEN 'Cash'
         ELSE 'Credit Card'
@@ -311,22 +311,22 @@ WHERE td.tournament_year = 2024
 
 -- Generate sales for 2025 tournament (current year) - higher volume
 INSERT INTO SFE_RAW_SALES (
-    transaction_id, transaction_date, transaction_time, location_id, 
-    style_number, sku, quantity_sold, unit_price, total_amount, 
+    transaction_id, transaction_date, transaction_time, location_id,
+    style_number, sku, quantity_sold, unit_price, total_amount,
     payment_method, tournament_id
 )
-SELECT 
+SELECT
     '2025-' || LPAD(ROW_NUMBER() OVER (ORDER BY RANDOM())::VARCHAR, 7, '0') AS transaction_id,
     td.sale_date AS transaction_date,
     TIMEADD('minute', UNIFORM(480, 1140, RANDOM()), '00:00:00'::TIME) AS transaction_time,
     UNIFORM(1, 4, RANDOM()) AS location_id,
     p.style_number,
-    p.style_number || '-' || 
+    p.style_number || '-' ||
         CASE MOD(UNIFORM(1, 10, RANDOM()), 5) WHEN 0 THEN 'S' WHEN 1 THEN 'M' WHEN 2 THEN 'L' WHEN 3 THEN 'XL' ELSE 'XXL' END AS sku,
     GREATEST(1, ROUND(UNIFORM(1, 5, RANDOM()) * td.day_multiplier)) AS quantity_sold,
     p.retail_price AS unit_price,
     GREATEST(1, ROUND(UNIFORM(1, 5, RANDOM()) * td.day_multiplier)) * p.retail_price AS total_amount,
-    CASE UNIFORM(1, 10, RANDOM()) 
+    CASE UNIFORM(1, 10, RANDOM())
         WHEN 1 THEN 'Cash'
         ELSE 'Credit Card'
     END AS payment_method,
@@ -347,7 +347,7 @@ INSERT INTO SFE_RAW_INVENTORY (
     beginning_qty, received_qty, sold_qty, ending_qty, tournament_id
 )
 WITH daily_sales AS (
-    SELECT 
+    SELECT
         transaction_date,
         location_id,
         style_number,
@@ -356,7 +356,7 @@ WITH daily_sales AS (
     FROM SFE_RAW_SALES
     GROUP BY transaction_date, location_id, style_number, tournament_id
 )
-SELECT 
+SELECT
     td.sale_date AS snapshot_date,
     l.location_id,
     p.style_number,
@@ -364,16 +364,16 @@ SELECT
     UNIFORM(50, 200, RANDOM()) AS beginning_qty,
     CASE WHEN DAYOFWEEK(td.sale_date) = 1 THEN UNIFORM(20, 100, RANDOM()) ELSE 0 END AS received_qty,
     COALESCE(ds.daily_sold, 0) AS sold_qty,
-    UNIFORM(50, 200, RANDOM()) + 
-        CASE WHEN DAYOFWEEK(td.sale_date) = 1 THEN UNIFORM(20, 100, RANDOM()) ELSE 0 END - 
+    UNIFORM(50, 200, RANDOM()) +
+        CASE WHEN DAYOFWEEK(td.sale_date) = 1 THEN UNIFORM(20, 100, RANDOM()) ELSE 0 END -
         COALESCE(ds.daily_sold, 0) AS ending_qty,
     td.tournament_id
 FROM tmp_tournament_dates td
 CROSS JOIN SFE_RAW_LOCATIONS l
 CROSS JOIN SFE_RAW_PRODUCTS p
-LEFT JOIN daily_sales ds 
-    ON td.sale_date = ds.transaction_date 
-    AND l.location_id = ds.location_id 
+LEFT JOIN daily_sales ds
+    ON td.sale_date = ds.transaction_date
+    AND l.location_id = ds.location_id
     AND p.style_number = ds.style_number
 WHERE UNIFORM(0, 100, RANDOM()) < 30;  -- Sample ~30% of combinations
 
@@ -387,4 +387,3 @@ DROP TABLE IF EXISTS tmp_tournament_dates;
 --   SELECT COUNT(*) FROM SFE_RAW_PRODUCTS;
 --   SELECT COUNT(*) FROM SFE_RAW_SALES;
 --   SELECT COUNT(*) FROM SFE_RAW_INVENTORY;
-

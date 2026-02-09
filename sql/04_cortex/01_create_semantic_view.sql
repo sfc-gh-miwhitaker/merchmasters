@@ -1,21 +1,21 @@
 /******************************************************************************
  * DEMO PROJECT: MerchMasters
  * Script: Create Semantic View for Cortex Analyst
- * 
+ *
  * NOT FOR PRODUCTION USE - EXAMPLE IMPLEMENTATION ONLY
- * 
+ *
  * PURPOSE:
  *   Define semantic model for tournament merchandise analytics enabling
  *   natural language queries about sales performance, inventory status,
  *   and year-over-year comparisons via Snowflake Intelligence.
- * 
+ *
  * OBJECTS CREATED:
  *   - SNOWFLAKE_EXAMPLE.SEMANTIC_MODELS.SFE_SV_MERCH_INTELLIGENCE (Semantic View)
- * 
+ *
  * CLEANUP:
  *   See sql/99_cleanup/teardown_all.sql
- * 
- * Author: SE Community | Expires: 2026-01-31
+ *
+ * Author: SE Community | Expires: 2026-04-10
  ******************************************************************************/
 
 -- ============================================================================
@@ -152,12 +152,16 @@ METRICS (
         WITH SYNONYMS ('number of products', 'sku count', 'product variety')
 )
 
-COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analytics | Author: SE Community | Expires: 2026-01-31';
+COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analytics | Author: SE Community | Expires: 2026-04-10'
+
+AI_SQL_GENERATION 'When comparing years, always use tournaments.tournament_year (2024 = prior year, 2025 = current year). For revenue queries, use sales.total_amount. For margin queries, use sales.gross_margin. For inventory queries, use the most recent snapshot per product/location using ending_qty. When asked about best sellers or top products, order by SUM(sales.total_amount) DESC unless units are specified. For stock alerts, use inventory.stock_status with Critical and Low as attention thresholds.'
+
+AI_QUESTION_CATEGORIZATION 'Categorize questions as: SALES for revenue, transaction, and margin questions; INVENTORY for stock level, on-hand, and reorder questions; PRODUCT for product-specific and category analysis; COMPARISON for year-over-year and period-over-period analysis; LOCATION for store-level and location comparison questions; VENDOR for supplier and brand performance.';
 
 
 /******************************************************************************
  * VERIFIED QUERIES
- * 
+ *
  * These queries have been designed to execute without error and return
  * actual results.
  ******************************************************************************/
@@ -165,15 +169,15 @@ COMMENT = 'DEMO: MerchMasters - Semantic model for tournament merchandise analyt
 -- Query 1: Top 10 products by revenue (current year)
 -- Natural Language: "What are the top 10 selling products this year?"
 /*
-SELECT 
+SELECT
     p.style_number,
     p.product_name,
     p.category,
     SUM(s.total_amount) AS total_revenue
 FROM SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_FCT_SALES s
-JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p 
+JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_PRODUCTS p
     ON s.style_number = p.style_number
-JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t 
+JOIN SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS.SFE_DIM_TOURNAMENTS t
     ON s.tournament_id = t.tournament_id
 WHERE t.tournament_year = 2025
 GROUP BY p.style_number, p.product_name, p.category
@@ -184,7 +188,7 @@ LIMIT 10;
 -- Query 2: Year-over-year category comparison
 -- Natural Language: "How are sales by category comparing to last year?"
 /*
-SELECT 
+SELECT
     p.category,
     SUM(CASE WHEN t.tournament_year = 2024 THEN s.total_amount ELSE 0 END) AS prior_year_revenue,
     SUM(CASE WHEN t.tournament_year = 2025 THEN s.total_amount ELSE 0 END) AS current_year_revenue
@@ -198,7 +202,7 @@ ORDER BY current_year_revenue DESC;
 -- Query 3: Sales by location (current year)
 -- Natural Language: "How are sales varying by location?"
 /*
-SELECT 
+SELECT
     l.location_name,
     SUM(s.total_amount) AS total_revenue,
     COUNT(s.transaction_id) AS transaction_count
@@ -213,7 +217,7 @@ ORDER BY total_revenue DESC;
 -- Query 4: Vendor performance comparison
 -- Natural Language: "Which vendors are performing best?"
 /*
-SELECT 
+SELECT
     p.vendor,
     SUM(s.total_amount) AS total_revenue,
     SUM(s.quantity_sold) AS units_sold,

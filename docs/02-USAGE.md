@@ -1,8 +1,8 @@
 # Usage Guide - MerchMasters
 
 **Author:** SE Community
-**Last Updated:** 2025-12-01
-**Expires:** 2026-01-31
+**Last Updated:** 2026-02-09
+**Expires:** 2026-04-10
 
 ---
 
@@ -182,7 +182,7 @@ Ask: **"How is style GS-2024-BLU selling each day?"**
 
 - Don't ask questions outside the data scope
 - Don't expect complex multi-step calculations
-- Don't compare to ChatGPT (different use case)
+- Don't compare to general-purpose chatbots (different use case)
 - Don't skip the business context explanation
 
 ---
@@ -196,13 +196,16 @@ If you want to explore the underlying data directly:
 USE SCHEMA SNOWFLAKE_EXAMPLE.SFE_MERCH_ANALYTICS;
 
 -- Product catalog
-SELECT * FROM SFE_DIM_PRODUCTS LIMIT 10;
+SELECT style_number, product_name, category, vendor, retail_price
+FROM SFE_DIM_PRODUCTS LIMIT 10;
 
 -- Sales facts
-SELECT * FROM SFE_FCT_SALES LIMIT 100;
+SELECT transaction_id, transaction_date, style_number, quantity_sold, total_amount
+FROM SFE_FCT_SALES LIMIT 100;
 
 -- Inventory snapshots
-SELECT * FROM SFE_FCT_INVENTORY LIMIT 100;
+SELECT snapshot_date, style_number, location_id, ending_qty, stock_status
+FROM SFE_FCT_INVENTORY LIMIT 100;
 
 -- Location summary
 SELECT
